@@ -1,5 +1,6 @@
 create table banners (
-    id UUID primary key ,
+    id character varying primary key ,
+    name character varying unique ,
     text character varying,
     image character varying
 )
