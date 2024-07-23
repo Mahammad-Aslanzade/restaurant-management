@@ -17,7 +17,7 @@ import java.util.Date;
 public class ImageService {
     private final String FOLDER_PATH = System.getProperty("user.dir") + "/uploads/";
 
-    public String upLoadImageAndGetPath(MultipartFile file) throws IOException {
+    public String upLoadImageAndGetPath(MultipartFile file){
         if (file == null || file.isEmpty()) {
             throw new RuntimeException("FILE_IS_NULL");
         }
@@ -34,7 +34,11 @@ public class ImageService {
 
         // Save the file
         File destinationFile = new File(filePath);
-        file.transferTo(destinationFile);
+        try {
+            file.transferTo(destinationFile);
+        } catch (IOException e) {
+            throw new RuntimeException("IMAGE_CANNOT_BE_UPLOADED");
+        }
 
         return filePath;
     }

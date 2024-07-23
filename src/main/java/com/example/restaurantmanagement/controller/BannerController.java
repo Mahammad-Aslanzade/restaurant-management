@@ -3,6 +3,7 @@ package com.example.restaurantmanagement.controller;
 import com.example.restaurantmanagement.model.banner.BannerDto;
 import com.example.restaurantmanagement.model.banner.BannerReqDto;
 import com.example.restaurantmanagement.service.BannerService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class BannerController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createBanner(@ModelAttribute BannerReqDto bannerReqDto){
+    public void createBanner(@ModelAttribute @Valid BannerReqDto bannerReqDto){
         bannerService.createBanner(bannerReqDto);
     }
 

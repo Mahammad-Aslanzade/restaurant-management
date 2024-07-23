@@ -59,12 +59,7 @@ public class BannerService {
             );
         }
         BannerEntity bannerEntity = bannerMapper.mapToEntity(bannerReqDto);
-        String imageUrl;
-        try {
-            imageUrl = imageService.upLoadImageAndGetPath(bannerReqDto.getImage());
-        } catch (IOException e) {
-            throw new RuntimeException("IMAGE_CANNOT_BE_UPLOADED");
-        }
+        String imageUrl = imageService.upLoadImageAndGetPath(bannerReqDto.getImage());
         bannerEntity.setImage(imageUrl);
         bannerRepository.save(bannerEntity);
     }
@@ -76,14 +71,9 @@ public class BannerService {
         if (bannerReqDto.getImage() == null) {
             bannerNew.setImage(bannerOld.getImage());
         } else {
-            String imageUrl;
-            try {
-                imageUrl = imageService.upLoadImageAndGetPath(bannerReqDto.getImage());
-                bannerNew.setImage(imageUrl);
-                imageService.deleteImage(bannerOld.getImage());
-            } catch (IOException e) {
-                throw new RuntimeException("IMAGE_CANNOT_BE_UPLOADED");
-            }
+            String imageUrl = imageService.upLoadImageAndGetPath(bannerReqDto.getImage());
+            bannerNew.setImage(imageUrl);
+            imageService.deleteImage(bannerOld.getImage());
         }
         bannerNew.setId(bannerOld.getId());
         bannerRepository.save(bannerNew);
