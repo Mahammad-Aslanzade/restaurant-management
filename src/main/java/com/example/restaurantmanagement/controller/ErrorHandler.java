@@ -6,13 +6,30 @@ import com.example.restaurantmanagement.model.exception.AlreadyExistDto;
 import com.example.restaurantmanagement.model.exception.NotFoundDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.HashMap;
+import java.util.List;
+
 @Slf4j
 @RestControllerAdvice
 public class ErrorHandler {
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public HashMap<String, String> handleValidations(MethodArgumentNotValidException ex) {
+        HashMap<String , String> errorList = new HashMap<>();
+        List<FieldError> errors = ex.getBindingResult().getFieldErrors();
+        errors.forEach((e) -> {
+            errorList.put(
+                    e.getField() , e.getDefaultMessage()
+            );
+        });
+        return errorList;
+    }
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
