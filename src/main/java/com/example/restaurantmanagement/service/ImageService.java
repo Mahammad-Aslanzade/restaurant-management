@@ -49,14 +49,13 @@ public class ImageService {
     }
 
 
-    public String deleteImage(String filePath) {
+    public void deleteImage(String filePath) {
         Path path = Paths.get(filePath);
         try {
             Files.delete(path);
         } catch (IOException e) {
-            return "IMAGE_CANNOT_DELETED";
+            throw new RuntimeException( "IMAGE_CANNOT_DELETED");
         }
-        return "IMAGE_DELETED";
     }
 
 

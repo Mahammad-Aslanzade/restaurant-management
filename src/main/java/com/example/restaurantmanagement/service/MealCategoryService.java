@@ -31,7 +31,7 @@ public class MealCategoryService {
         return mealCategoryDtos;
     }
 
-    private MealCategoryEntity getCategoryEntity(String categoryId) {
+    public MealCategoryEntity getCategoryEntity(String categoryId) {
         return mealCategoryRepository.findById(categoryId)
                 .orElseThrow(() ->
                         new NotFoundException(
@@ -78,6 +78,7 @@ public class MealCategoryService {
     public void deleteMealCategory(String categoryId) {
         log.info("ACTION.deleteMealCategory.start categoryId : {}", categoryId);
         MealCategoryEntity mealCategoryEntity = getCategoryEntity(categoryId);
+        imageService.deleteImage(mealCategoryEntity.getImage());
         mealCategoryRepository.delete(mealCategoryEntity);
         log.info("ACTION.deleteMealCategory.end categoryId : {}", categoryId);
     }
