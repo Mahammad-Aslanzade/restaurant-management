@@ -50,6 +50,7 @@ public class ImageService {
 
 
     public void deleteImage(String filePath) {
+        if (filePath == null) return;
         Path path = Paths.get(filePath);
         try {
             Files.delete(path);

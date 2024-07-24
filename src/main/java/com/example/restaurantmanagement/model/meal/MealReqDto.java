@@ -17,15 +17,16 @@ public class MealReqDto {
     private MultipartFile image;
     @NotNull(message = "ingredientsList cann't be null , you can set empty [] if nothing exist")
     private List<String> ingredientsList;
+    @NotNull(message = "categoryId cann't be null")
     private String categoryId;
     private String description;
-    private double carbohydrates;
-    private double calories;
-    private double fat;
-    private double gram;
-    private double protein;
-    private double price;
-    private double salePrice;
-    private double rate;
+    private Double carbohydrates;
+    private Double calories;
+    private Double fat;
+    private Double gram;
+    private Double protein;
+    private Double price;
+    private Double salePrice;
+    private Double rate;
 
 }

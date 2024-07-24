@@ -20,12 +20,12 @@ public class MealDto {
     private List<String> ingredientsList;
     private MealCategoryDto category;
     private String description;
-    private double carbohydrates;
-    private double calories;
-    private double fat;
-    private double gram;
-    private double protein;
-    private double price;
-    private double salePrice;
-    private double rate;
+    private Double carbohydrates;
+    private Double calories;
+    private Double fat;
+    private Double gram;
+    private Double protein;
+    private Double price;
+    private Double salePrice;
+    private Double rate;
 }

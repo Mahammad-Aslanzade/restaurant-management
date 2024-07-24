@@ -13,6 +13,8 @@ public interface MealMapper {
 
     List<MealDto> listToDto(List<MealEntity> mealEntities);
 
-    @Mapping(target = "image" , ignore = true)
+    @Mapping(target = "image", ignore = true)
     MealEntity mapToEntity(MealReqDto mealReqDto);
+
+    MealDto mapToDto(MealEntity mealEntity);
 }

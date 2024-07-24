@@ -26,14 +26,14 @@ public class MealEntity {
     private String ingredients;
     private String image;
     private String description;
-    private double carbohydrates;
-    private double calories;
-    private double fat;
-    private double gram;
-    private double protein;
-    private double price;
-    private double salePrice;
-    private double rate;
+    private Double carbohydrates;
+    private Double calories;
+    private Double fat;
+    private Double gram;
+    private Double protein;
+    private Double price;
+    private Double salePrice;
+    private Double rate;
     @OneToOne
     @JoinColumn(name = "category")
     private MealCategoryEntity category;
