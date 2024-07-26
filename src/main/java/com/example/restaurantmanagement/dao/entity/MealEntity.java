@@ -41,7 +41,7 @@ public class MealEntity {
     @Transient
     private List<String> ingredientsList;
     @Transient
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private static ObjectMapper objectMapper = new ObjectMapper();
 
 
     public void setIngredientsList(List<String> ingredientsList) {
