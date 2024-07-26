@@ -2,7 +2,7 @@ package com.example.restaurantmanagement.enums;
 
 public enum ExceptionDetails {
     BANNER_NOT_FOUND, CATEGORY_NOT_FOUND, MEAL_NOT_FOUND,
-    ALREADY_EXIST;
+    ALREADY_EXIST , THIS_EMAIL_IS_ALREADY_EXIST;
 
     public String message() {
         return this.toString();
