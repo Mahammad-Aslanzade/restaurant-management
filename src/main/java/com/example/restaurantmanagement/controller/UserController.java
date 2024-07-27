@@ -22,8 +22,8 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @PostMapping("/verificateEmail")
-    public void verificateEmail(@RequestParam String email){
-        emailVerificationService.verificateEmail(email);
+    @PostMapping("/verifyEmail")
+    public void verifyEmail(@RequestParam String email){
+        emailVerificationService.verifyEmail(email);
     }
 }

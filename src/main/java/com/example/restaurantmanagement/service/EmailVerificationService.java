@@ -27,7 +27,7 @@ public class EmailVerificationService {
 
     private static final Random random = new Random();
 
-    public void verificateEmail(String email) {
+    public void verifyEmail(String email) {
         EmailVerificationEntity lastRequest = emailVerificationRepository.findLatestEntity();
         LocalDateTime twoMinuteAge = LocalDateTime.now().minusMinutes(2);
         String generatedCode = random.nextInt(1000, 9999) + "-" + random.nextInt(1000, 9999);
@@ -35,29 +35,29 @@ public class EmailVerificationService {
         if (userRepository.findUserEntitiesByEmail(email).isPresent()) {
             throw new AlreadyExistException(
                     ExceptionDetails.THIS_EMAIL_IS_ALREADY_EXIST.message(),
-                    ExceptionDetails.THIS_EMAIL_IS_ALREADY_EXIST.createLogMessage("verificateEmail" , "email" , email)
+                    ExceptionDetails.THIS_EMAIL_IS_ALREADY_EXIST.createLogMessage("verificateEmail", "email", email)
             );
         }
 
 
-        if (lastRequest == null || lastRequest.getIssueDate().isBefore(twoMinuteAge)) {
-            emailService.postEmail(email,
-                    "Restaurant management app",
-                    String.format("Your verification code is  **%s**", generatedCode)
-            );
-
-            EmailVerificationEntity verificatedEntity = EmailVerificationEntity.builder()
-                    .email(email)
-                    .verificationCode(generatedCode)
-                    .issueDate(LocalDateTime.now())
-                    .verificationStatus(VerificationStatus.PENDING)
-                    .build();
-            emailVerificationRepository.save(verificatedEntity);
-        }else{
-            throw  new AlreadyExistException(
+        if (lastRequest != null && lastRequest.getIssueDate().isAfter(twoMinuteAge)) {
+            throw new AlreadyExistException(
                     "Verification session has opened yet! Your verificitaion code already exist",
-                    String.format("ACTION.ERROR.verificateEmail email : %s" , email)
+                    String.format("ACTION.ERROR.verificateEmail email : %s", email)
             );
         }
+
+        EmailVerificationEntity verificatedEntity = EmailVerificationEntity.builder()
+                .email(email)
+                .verificationCode(generatedCode)
+                .issueDate(LocalDateTime.now())
+                .verificationStatus(VerificationStatus.PENDING)
+                .build();
+        emailVerificationRepository.save(verificatedEntity);
+
+        emailService.postEmail(email,
+                "Restaurant management app",
+                String.format("Your verification code is  **%s**", generatedCode)
+        );
     }
 }
