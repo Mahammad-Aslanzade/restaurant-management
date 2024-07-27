@@ -5,6 +5,8 @@ import com.example.restaurantmanagement.service.EmailVerificationService;
 import com.example.restaurantmanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.context.Context;
+
 
 import java.util.List;
 
@@ -23,7 +25,8 @@ public class UserController {
     }
 
     @PostMapping("/verifyEmail")
-    public void verifyEmail(@RequestParam String email){
+    public void verifyEmail(@RequestParam String email) {
         emailVerificationService.verifyEmail(email);
     }
+
 }

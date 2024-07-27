@@ -47,6 +47,9 @@ dependencies {
     //Email Service
     implementation 'org.springframework.boot:spring-boot-starter-mail:3.3.1'
 
+    //ThymeLeaf for sending email html
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
 
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

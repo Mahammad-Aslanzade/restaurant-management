@@ -6,10 +6,10 @@ import com.example.restaurantmanagement.dao.repository.UserRepository;
 import com.example.restaurantmanagement.enums.ExceptionDetails;
 import com.example.restaurantmanagement.enums.VerificationStatus;
 import com.example.restaurantmanagement.exceptions.AlreadyExistException;
-import com.example.restaurantmanagement.mapper.EmailVerificationMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
 
 import java.time.LocalDateTime;
 import java.util.Random;
@@ -21,17 +21,13 @@ public class EmailVerificationService {
 
     private final EmailService emailService;
     private final EmailVerificationRepository emailVerificationRepository;
-    private final EmailVerificationMapper emailVerificationMapper;
     private final UserRepository userRepository;
-
 
     private static final Random random = new Random();
 
     public void verifyEmail(String email) {
-        EmailVerificationEntity lastRequest = emailVerificationRepository.findLatestEntity();
-        LocalDateTime twoMinuteAge = LocalDateTime.now().minusMinutes(2);
-        String generatedCode = random.nextInt(1000, 9999) + "-" + random.nextInt(1000, 9999);
 
+        //Does user exist with this email (checking process)
         if (userRepository.findUserEntitiesByEmail(email).isPresent()) {
             throw new AlreadyExistException(
                     ExceptionDetails.THIS_EMAIL_IS_ALREADY_EXIST.message(),
@@ -39,7 +35,10 @@ public class EmailVerificationService {
             );
         }
 
+        EmailVerificationEntity lastRequest = emailVerificationRepository.findLatestEntity();
 
+        //Checking request of user and Check session 2min if
+        LocalDateTime twoMinuteAge = LocalDateTime.now().minusMinutes(2);
         if (lastRequest != null && lastRequest.getIssueDate().isAfter(twoMinuteAge)) {
             throw new AlreadyExistException(
                     "Verification session has opened yet! Your verificitaion code already exist",
@@ -47,6 +46,19 @@ public class EmailVerificationService {
             );
         }
 
+        //Settings of html template and pass it to emailService
+        String templateName = "email-verification";
+        String generatedCode = random.nextInt(1000, 9999) + "-" + random.nextInt(1000, 9999);
+        Context context = new Context();
+        context.setVariable("verificationCode", generatedCode);
+        emailService.sendEmailWithHtmlTemplate(
+                email,
+                "Restaurant App Verification",
+                templateName, context
+        );
+
+        //We save details to database at the end
+        //Because it can be some problem during sending email
         EmailVerificationEntity verificatedEntity = EmailVerificationEntity.builder()
                 .email(email)
                 .verificationCode(generatedCode)
@@ -54,10 +66,6 @@ public class EmailVerificationService {
                 .verificationStatus(VerificationStatus.PENDING)
                 .build();
         emailVerificationRepository.save(verificatedEntity);
-
-        emailService.postEmail(email,
-                "Restaurant management app",
-                String.format("Your verification code is  **%s**", generatedCode)
-        );
     }
+
 }
