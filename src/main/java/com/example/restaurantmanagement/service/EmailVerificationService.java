@@ -6,6 +6,7 @@ import com.example.restaurantmanagement.dao.repository.UserRepository;
 import com.example.restaurantmanagement.enums.ExceptionDetails;
 import com.example.restaurantmanagement.enums.VerificationStatus;
 import com.example.restaurantmanagement.exceptions.AlreadyExistException;
+import com.example.restaurantmanagement.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -59,13 +60,32 @@ public class EmailVerificationService {
 
         //We save details to database at the end
         //Because it can be some problem during sending email
-        EmailVerificationEntity verificatedEntity = EmailVerificationEntity.builder()
-                .email(email)
-                .verificationCode(generatedCode)
-                .issueDate(LocalDateTime.now())
-                .verificationStatus(VerificationStatus.PENDING)
-                .build();
+        EmailVerificationEntity verificatedEntity = new EmailVerificationEntity();
+        verificatedEntity.setEmail(email);
+        verificatedEntity.setVerificationCode(generatedCode);
+        verificatedEntity.setIssueDate(LocalDateTime.now());
+        verificatedEntity.setVerificationStatus(VerificationStatus.PENDING);
+
         emailVerificationRepository.save(verificatedEntity);
     }
+
+    public Boolean checkValidCode(String email, String code) {
+        EmailVerificationEntity lastRequest = emailVerificationRepository.findLatestEntity();
+        LocalDateTime twoMinuteAge = LocalDateTime.now().minusMinutes(2);
+        return lastRequest != null && lastRequest.getIssueDate().isAfter(twoMinuteAge);
+    }
+
+    public void changeStatus(String email, VerificationStatus verificationStatus) {
+        EmailVerificationEntity emailVerification = emailVerificationRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new NotFoundException(
+                                ExceptionDetails.EMAIL_NOT_FOUND.message(),
+                                ExceptionDetails.EMAIL_NOT_FOUND.createLogMessage("changeStatus", "email", email)
+                        )
+                );
+        emailVerification.setVerificationStatus(verificationStatus);
+        emailVerificationRepository.save(emailVerification);
+    }
+
 
 }

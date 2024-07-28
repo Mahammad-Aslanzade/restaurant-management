@@ -1,9 +1,12 @@
 package com.example.restaurantmanagement.controller;
 
+import com.example.restaurantmanagement.model.user.UserCreateDto;
 import com.example.restaurantmanagement.model.user.UserDto;
 import com.example.restaurantmanagement.service.EmailVerificationService;
 import com.example.restaurantmanagement.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.context.Context;
 
@@ -25,8 +28,14 @@ public class UserController {
     }
 
     @PostMapping("/verifyEmail")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public void verifyEmail(@RequestParam String email) {
         emailVerificationService.verifyEmail(email);
+    }
+
+    @PostMapping
+    public void createUser(@RequestBody @Valid UserCreateDto userCreateDto){
+        userService.createUser(userCreateDto);
     }
 
 }
