@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Random;
 
 @RequiredArgsConstructor
@@ -29,18 +30,18 @@ public class EmailVerificationService {
     public String verifyEmail(String email) {
         log.info("ACTION.verifyEmail.start email : {}", email);
         //Does user exist with this email (checking process)
-        if (userRepository.findUserEntitiesByEmail(email).isPresent()) {
+        if (userRepository.findByEmail(email).isPresent()) {
             throw new AlreadyExistException(
                     ExceptionDetails.THIS_EMAIL_IS_ALREADY_EXIST.message(),
                     ExceptionDetails.THIS_EMAIL_IS_ALREADY_EXIST.createLogMessage("verificateEmail", "email", email)
             );
         }
 
-        EmailVerificationEntity lastRequest = emailVerificationRepository.findLatestEntity(email);
+        Optional<EmailVerificationEntity> lastRequest = emailVerificationRepository.findLatestEntity(email);
 
         //Checking request of user and Check session 2min if
         LocalDateTime twoMinuteAge = LocalDateTime.now().minusMinutes(2);
-        if (lastRequest != null && lastRequest.getIssueDate().isAfter(twoMinuteAge)) {
+        if (lastRequest.isPresent() && lastRequest.get().getIssueDate().isAfter(twoMinuteAge)) {
             throw new AlreadyExistException(
                     "Verification session has opened yet! Your verificitaion code already exist",
                     String.format("ACTION.ERROR.verificateEmail email : %s", email)
@@ -72,13 +73,13 @@ public class EmailVerificationService {
     }
 
     public Boolean checkValidCode(String email, String code) {
-        EmailVerificationEntity lastRequest = emailVerificationRepository.findLatestEntity(email);
+        Optional<EmailVerificationEntity> lastRequest = emailVerificationRepository.findLatestEntity(email);
         LocalDateTime twoMinuteAge = LocalDateTime.now().minusMinutes(2);
-        return lastRequest != null && lastRequest.getIssueDate().isAfter(twoMinuteAge);
+        return lastRequest.isPresent() && lastRequest.get().getIssueDate().isAfter(twoMinuteAge) && lastRequest.get().getVerificationCode().equals(code);
     }
 
     public void changeStatus(String email, VerificationStatus verificationStatus) {
-        EmailVerificationEntity emailVerification = emailVerificationRepository.findByEmail(email)
+        EmailVerificationEntity emailVerification = emailVerificationRepository.findLatestEntity(email)
                 .orElseThrow(() ->
                         new NotFoundException(
                                 ExceptionDetails.EMAIL_NOT_FOUND.message(),

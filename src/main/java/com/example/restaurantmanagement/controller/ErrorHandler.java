@@ -22,6 +22,7 @@ import java.util.List;
 public class ErrorHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public HashMap<String, String> handleValidations(MethodArgumentNotValidException ex) {
         HashMap<String, String> errorList = new HashMap<>();
         List<FieldError> errors = ex.getBindingResult().getFieldErrors();

@@ -2,11 +2,15 @@ package com.example.restaurantmanagement.service;
 
 import com.example.restaurantmanagement.dao.entity.UserEntity;
 import com.example.restaurantmanagement.dao.repository.UserRepository;
+import com.example.restaurantmanagement.enums.ExceptionDetails;
 import com.example.restaurantmanagement.enums.VerificationStatus;
+import com.example.restaurantmanagement.exceptions.AlreadyExistException;
 import com.example.restaurantmanagement.exceptions.IsNotValidForRegister;
+import com.example.restaurantmanagement.exceptions.NotFoundException;
 import com.example.restaurantmanagement.mapper.UserMapper;
 import com.example.restaurantmanagement.model.user.UserCreateDto;
 import com.example.restaurantmanagement.model.user.UserDto;
+import com.example.restaurantmanagement.model.user.UserUpdateDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,12 +34,39 @@ public class UserService {
         return userDtoList;
     }
 
+    private UserEntity getUserEntity(String userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException(
+                        ExceptionDetails.USER_NOT_FOUND.message(),
+                        ExceptionDetails.USER_NOT_FOUND.createLogMessage("getUserEntity", userId)
+                )
+        );
+    }
+
+    public UserDto getUserById(String userId) {
+        log.info("ACTION.getUserById.start userId : {}", userId);
+        UserEntity userEntity = getUserEntity(userId);
+        UserDto userDto = userMapper.mapToDto(userEntity);
+        log.info("ACTION.getUserById.end userId : {}", userId);
+        return userDto;
+    }
+
     public void createUser(UserCreateDto userCreateDto) {
+        log.info("ACTION.createUser.start requestBody : {}", userCreateDto);
+
+        // Checking user table if any same email exist
+        if (userRepository.findByEmail(userCreateDto.getEmail()).isPresent()){
+            throw new  AlreadyExistException (
+                    ExceptionDetails.THIS_EMAIL_IS_ALREADY_EXIST.message(),
+                    ExceptionDetails.THIS_EMAIL_IS_ALREADY_EXIST.createLogMessage("createUser", "email", userCreateDto.getEmail())
+            );
+        }
+
+        // Check code is valid
         Boolean isValidForReg = emailVerificationService.checkValidCode(
                 userCreateDto.getEmail(),
                 userCreateDto.getVerificationCode()
         );
-
         if (!isValidForReg) {
             throw new IsNotValidForRegister(
                     userCreateDto.getVerificationCode(),
@@ -48,6 +79,26 @@ public class UserService {
         UserEntity userEntity = userMapper.mapToEntity(userCreateDto);
         userRepository.save(userEntity);
         emailVerificationService.changeStatus(userCreateDto.getEmail(), VerificationStatus.VERIFICATED);
+        log.info("ACTION.createUser.end requestBody : {}", userCreateDto);
+    }
+
+    public void updateUser(String userId, UserUpdateDto userUpdateDto) {
+        log.info("ACTION.updateUser.start id : {} | reqBody : {}", userId, userUpdateDto);
+        UserEntity oldUser = getUserEntity(userId);
+        UserEntity updatedUser = userMapper.mapToEntity(userUpdateDto);
+        updatedUser.setId(oldUser.getId());
+        // email cann't be updated | it will be add with verification like registering soon
+        updatedUser.setEmail(oldUser.getEmail());
+        updatedUser.setAddressList(oldUser.getAddressList());
+        userRepository.save(updatedUser);
+        log.info("ACTION.updateUser.end id : {} | reqBody : {}", userId, userUpdateDto);
+    }
+
+    public void deleteUser(String userId) {
+        log.info("ACTION.deleteUser.start userId : {}", userId);
+        UserEntity user = getUserEntity(userId);
+        userRepository.delete(user);
+        log.info("ACTION.deleteUser.end userId : {}", userId);
     }
 
 }

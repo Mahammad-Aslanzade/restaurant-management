@@ -24,7 +24,7 @@ public class UserEntity {
     private String surname;
     private String email;
     private String phoneNumber;
-    @OneToMany(mappedBy = "user" )
+    @OneToMany(mappedBy = "user" , orphanRemoval = true)
     private List<AddressEntity> addressList;
     private LocalDate birthDate;
 }
