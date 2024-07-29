@@ -29,13 +29,14 @@ public class UserController {
 
     @PostMapping("/verifyEmail")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void verifyEmail(@RequestParam String email) {
-        emailVerificationService.verifyEmail(email);
+    public String verifyEmail(@RequestParam String email) {
+        return emailVerificationService.verifyEmail(email);
     }
 
     @PostMapping
     public void createUser(@RequestBody @Valid UserCreateDto userCreateDto){
         userService.createUser(userCreateDto);
     }
+
 
 }

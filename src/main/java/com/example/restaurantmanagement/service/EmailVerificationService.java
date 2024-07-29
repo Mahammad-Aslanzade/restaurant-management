@@ -26,8 +26,8 @@ public class EmailVerificationService {
 
     private static final Random random = new Random();
 
-    public void verifyEmail(String email) {
-
+    public String verifyEmail(String email) {
+        log.info("ACTION.verifyEmail.start email : {}", email);
         //Does user exist with this email (checking process)
         if (userRepository.findUserEntitiesByEmail(email).isPresent()) {
             throw new AlreadyExistException(
@@ -36,7 +36,7 @@ public class EmailVerificationService {
             );
         }
 
-        EmailVerificationEntity lastRequest = emailVerificationRepository.findLatestEntity();
+        EmailVerificationEntity lastRequest = emailVerificationRepository.findLatestEntity(email);
 
         //Checking request of user and Check session 2min if
         LocalDateTime twoMinuteAge = LocalDateTime.now().minusMinutes(2);
@@ -67,10 +67,12 @@ public class EmailVerificationService {
         verificatedEntity.setVerificationStatus(VerificationStatus.PENDING);
 
         emailVerificationRepository.save(verificatedEntity);
+        log.info("ACTION.verifyEmail.end email : {}", email);
+        return generatedCode;
     }
 
     public Boolean checkValidCode(String email, String code) {
-        EmailVerificationEntity lastRequest = emailVerificationRepository.findLatestEntity();
+        EmailVerificationEntity lastRequest = emailVerificationRepository.findLatestEntity(email);
         LocalDateTime twoMinuteAge = LocalDateTime.now().minusMinutes(2);
         return lastRequest != null && lastRequest.getIssueDate().isAfter(twoMinuteAge);
     }
