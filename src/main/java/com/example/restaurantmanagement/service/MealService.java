@@ -33,7 +33,7 @@ public class MealService {
         return mealDtos;
     }
 
-    private MealEntity getMealEntity(String mealId) {
+    public MealEntity getMealEntity(String mealId) {
         return mealRepository.findById(mealId).orElseThrow(() ->
                 new NotFoundException(
                         ExceptionDetails.MEAL_NOT_FOUND.message(),

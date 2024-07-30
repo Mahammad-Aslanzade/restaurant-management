@@ -34,7 +34,7 @@ public class UserService {
         return userDtoList;
     }
 
-    private UserEntity getUserEntity(String userId) {
+    public UserEntity getUserEntity(String userId) {
         return userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException(
                         ExceptionDetails.USER_NOT_FOUND.message(),

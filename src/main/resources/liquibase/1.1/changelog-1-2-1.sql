@@ -29,3 +29,15 @@ CREATE TABLE addresses
     user_id      character varying,
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
+
+CREATE TABLE feedbacks
+(
+    id      character varying(36) PRIMARY KEY,
+    text    character varying,
+    rate    float,
+    meal_id character varying,
+    FOREIGN KEY (meal_id) REFERENCES meals (id),
+    check ( rate >= 0 AND rate <= 5),
+    user_id character varying(36),
+    FOREIGN KEY (user_id) REFERENCES users (id)
+)

@@ -1,7 +1,7 @@
 package com.example.restaurantmanagement.enums;
 
 public enum ExceptionDetails {
-    BANNER_NOT_FOUND, CATEGORY_NOT_FOUND, MEAL_NOT_FOUND, EMAIL_NOT_FOUND, USER_NOT_FOUND,
+    BANNER_NOT_FOUND, CATEGORY_NOT_FOUND, MEAL_NOT_FOUND, EMAIL_NOT_FOUND, USER_NOT_FOUND, FEEDBACK_NOT_FOUND,
     ALREADY_EXIST, THIS_EMAIL_IS_ALREADY_EXIST;
 
     public String message() {
