@@ -20,6 +20,6 @@ public class TableEntity {
     private Integer no;
     private Integer floor;
     private Integer capacity;
-    private Boolean ciggarette;
+    private Boolean cigarette;
     private Boolean windowView;
 }
