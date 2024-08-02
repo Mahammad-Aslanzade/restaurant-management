@@ -30,7 +30,7 @@ public class TableService {
         return tableDtoList;
     }
 
-    private TableEntity getTableEntity(String tableId) {
+    public TableEntity getTableEntity(String tableId) {
         return tableRepository.findById(tableId).orElseThrow(() ->
                 new NotFoundException(
                         ExceptionDetails.TABLE_NOT_FOUND.message(),
