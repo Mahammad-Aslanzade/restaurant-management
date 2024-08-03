@@ -1,5 +1,6 @@
 package com.example.restaurantmanagement.service;
 
+import com.example.restaurantmanagement.dao.entity.AddressEntity;
 import com.example.restaurantmanagement.dao.entity.UserEntity;
 import com.example.restaurantmanagement.dao.repository.UserRepository;
 import com.example.restaurantmanagement.enums.ExceptionDetails;
@@ -25,6 +26,7 @@ public class UserService {
     private final UserMapper userMapper;
     private final UserRepository userRepository;
     private final EmailVerificationService emailVerificationService;
+
 
     public List<UserDto> getAllUsers() {
         log.info("ACTION.getAllUsers.start");
@@ -55,8 +57,8 @@ public class UserService {
         log.info("ACTION.createUser.start requestBody : {}", userCreateDto);
 
         // Checking user table if any same email exist
-        if (userRepository.findByEmail(userCreateDto.getEmail()).isPresent()){
-            throw new  AlreadyExistException (
+        if (userRepository.findByEmail(userCreateDto.getEmail()).isPresent()) {
+            throw new AlreadyExistException(
                     ExceptionDetails.THIS_EMAIL_IS_ALREADY_EXIST.message(),
                     ExceptionDetails.THIS_EMAIL_IS_ALREADY_EXIST.createLogMessage("createUser", "email", userCreateDto.getEmail())
             );
@@ -99,6 +101,22 @@ public class UserService {
         UserEntity user = getUserEntity(userId);
         userRepository.delete(user);
         log.info("ACTION.deleteUser.end userId : {}", userId);
+    }
+
+    public AddressEntity haveThisAddress(String userId, String addressId) {
+        UserEntity user = getUserEntity(userId);
+        List<AddressEntity> addressList = user.getAddressList();
+
+        for (AddressEntity address : addressList) {
+            if (address.getId().equals(addressId)) {
+                return address;
+            }
+        }
+
+        throw new NotFoundException(
+                ExceptionDetails.INVALID_ADDRESS.message(),
+                String.format("ACTION.ERROR.haveThisAddress userId : %s | addressId : %s", userId, addressId)
+        );
     }
 
 }

@@ -94,5 +94,15 @@ public class MealService {
         log.info("ACTION.deleteMeal.end mealId : {}", mealId);
     }
 
+    public Double calculateTotalPrice(List<String> meals) {
+        Double totalAmount = 0.0;
+        for (String m : meals) {
+            MealEntity thisMeal = getMealEntity(m);
+            if (thisMeal.getPrice() != null)
+                totalAmount += thisMeal.getPrice();
+        }
+        return totalAmount;
+    }
+
 
 }

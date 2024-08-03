@@ -13,10 +13,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderDto {
-    private String id;
-    private Double totalPrice;
-    private UserDto user;
+public class OrderUpdateDto {
+    private String userId;
     private String addressId;
     private OrderStatus status;
     private OrderType type;
