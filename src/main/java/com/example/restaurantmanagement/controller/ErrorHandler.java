@@ -1,9 +1,11 @@
 package com.example.restaurantmanagement.controller;
 
 import com.example.restaurantmanagement.exceptions.AlreadyExistException;
+import com.example.restaurantmanagement.exceptions.InvalidException;
 import com.example.restaurantmanagement.exceptions.IsNotValidForRegister;
 import com.example.restaurantmanagement.exceptions.NotFoundException;
 import com.example.restaurantmanagement.model.exception.AlreadyExistDto;
+import com.example.restaurantmanagement.model.exception.InvalidExceptionDto;
 import com.example.restaurantmanagement.model.exception.IsNotValidRegDto;
 import com.example.restaurantmanagement.model.exception.NotFoundDto;
 import lombok.extern.slf4j.Slf4j;
@@ -55,6 +57,16 @@ public class ErrorHandler {
         return new IsNotValidRegDto(
                 exception.getVerificationCode(),
                 exception.getUserEmail(),
+                exception.getMessage()
+        );
+    }
+
+    @ExceptionHandler(InvalidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public InvalidExceptionDto handleInvalidParameter(InvalidException exception){
+        log.error(exception.getLogMessage());
+        return new InvalidExceptionDto(
+                exception.getParameter(),
                 exception.getMessage()
         );
     }
