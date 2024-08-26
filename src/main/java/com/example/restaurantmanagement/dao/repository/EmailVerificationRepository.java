@@ -1,10 +1,12 @@
 package com.example.restaurantmanagement.dao.repository;
 
 import com.example.restaurantmanagement.dao.entity.EmailVerificationEntity;
+import com.example.restaurantmanagement.enums.VerificationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface EmailVerificationRepository extends JpaRepository<EmailVerificationEntity, String> {
@@ -13,6 +15,8 @@ public interface EmailVerificationRepository extends JpaRepository<EmailVerifica
     Optional<EmailVerificationEntity> findLatestEntity(@Param("email") String email);
 
     Optional<EmailVerificationEntity> findByEmail(String email);
+
+    List<EmailVerificationEntity> findAllByVerificationStatusIsNot(VerificationStatus verificationStatus);
 
 
 }

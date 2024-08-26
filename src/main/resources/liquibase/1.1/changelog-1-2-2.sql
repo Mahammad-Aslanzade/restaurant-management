@@ -27,7 +27,7 @@ CREATE TABLE orders
     total_price  float,
     meals        character varying DEFAULT '[]',
     address_id   character varying(36),
-    status       character varying NOT NULL CHECK ( status in ('PREPARING', 'READY' , 'DELIVERING', 'TAKEN', 'PLANNED' , 'COMPLETED')),
+    status       character varying NOT NULL CHECK ( status in ('PREPARING', 'READY' , 'DELIVERING', 'TAKEN', 'PLANNED' , 'COMPLETED ')),
     payment_type character varying NOT NULL CHECK ( payment_type in ('CASH', 'CARD') ),
     type         character varying NOT NULL CHECK ( type in ('TAKEAWAY', 'DELIVERY', 'PLANNED')),
     FOREIGN KEY (user_id) REFERENCES users (id),

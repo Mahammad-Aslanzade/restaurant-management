@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -24,6 +25,7 @@ public class EmailVerificationService {
     private final EmailService emailService;
     private final EmailVerificationRepository emailVerificationRepository;
     private final UserRepository userRepository;
+    private final LocalDateTime twoMinuteAgo = LocalDateTime.now().minusMinutes(2);
 
     private static final Random random = new Random();
 
@@ -74,8 +76,7 @@ public class EmailVerificationService {
 
     public Boolean checkValidCode(String email, String code) {
         Optional<EmailVerificationEntity> lastRequest = emailVerificationRepository.findLatestEntity(email);
-        LocalDateTime twoMinuteAge = LocalDateTime.now().minusMinutes(2);
-        return lastRequest.isPresent() && lastRequest.get().getIssueDate().isAfter(twoMinuteAge) && lastRequest.get().getVerificationCode().equals(code);
+        return lastRequest.isPresent() && lastRequest.get().getIssueDate().isAfter(twoMinuteAgo) && lastRequest.get().getVerificationCode().equals(code);
     }
 
     public void changeStatus(String email, VerificationStatus verificationStatus) {
@@ -88,6 +89,19 @@ public class EmailVerificationService {
                 );
         emailVerification.setVerificationStatus(verificationStatus);
         emailVerificationRepository.save(emailVerification);
+    }
+
+    public void defineExpiredCodes(){
+        List<EmailVerificationEntity> emailVerifications = emailVerificationRepository.findAllByVerificationStatusIsNot(VerificationStatus.FAILED);
+        emailVerifications.forEach((verification)->{
+            if(verification.getIssueDate().isBefore(twoMinuteAgo)){
+                verification.setVerificationStatus(VerificationStatus.FAILED);
+                log.info(
+                        String.format("Email : %s | Verification-code : %s | EXPIRED",verification.getEmail(),verification.getVerificationCode())
+                );
+            }
+        });
+        emailVerificationRepository.saveAll(emailVerifications);
     }
 
 

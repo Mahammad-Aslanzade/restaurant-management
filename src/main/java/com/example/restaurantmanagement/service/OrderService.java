@@ -13,6 +13,7 @@ import com.example.restaurantmanagement.exceptions.NotFoundException;
 import com.example.restaurantmanagement.mapper.OrderMapper;
 import com.example.restaurantmanagement.model.order.OrderCreateDto;
 import com.example.restaurantmanagement.model.order.OrderDto;
+import com.example.restaurantmanagement.model.order.OrderUpdateDto;
 import com.example.restaurantmanagement.model.order.UpdateStatusDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -118,12 +119,28 @@ public class OrderService {
     public void updateOrderStatus(String orderId, UpdateStatusDto updateStatusDto) {
         OrderStatus status = updateStatusDto.getStatus();
         log.info("ACTION.updateOrderStatus.start orderId : {} | status : {}", orderId, status);
-        log.info("HEREEEE----------------- {}" , status);
-//        OrderStatus status = OrderStatus.convertToEnum(orderStatus);
         OrderEntity order = getOrderEntity(orderId);
         order.setStatus(status);
         orderRepository.save(order);
         log.info("ACTION.updateOrderStatus.end orderId : {} | status : {}", orderId, status);
+    }
+
+    public void updateOrder(String orderId, OrderUpdateDto orderUpdateDto) {
+        log.info("ACTION.updateOrder.start orderId : {} | requestDto : {}", orderId, orderUpdateDto);
+        OrderEntity oldOrder = getOrderEntity(orderId);
+        OrderEntity updatedOrder = orderMapper.mapToEntity(orderUpdateDto);
+        updatedOrder.setId(oldOrder.getId());
+        // User and Address
+        UserEntity user = userService.getUserEntity(orderUpdateDto.getUserId());
+        AddressEntity address = userService.haveThisAddress(orderUpdateDto.getUserId(), orderUpdateDto.getAddressId());
+        updatedOrder.setUser(user);
+        updatedOrder.setAddress(address);
+        // Total amount
+        Double totalPrice = mealService.calculateTotalPrice(orderUpdateDto.getMealList());
+        log.info("HERE-----------{}",totalPrice);
+        updatedOrder.setTotalPrice(totalPrice);
+        orderRepository.save(updatedOrder);
+        log.info("ACTION.updateOrder.end orderId : {} | requestDto : {}", orderId, orderUpdateDto);
     }
 
 }

@@ -1,8 +1,8 @@
 package com.example.restaurantmanagement.controller;
 
-import com.example.restaurantmanagement.enums.OrderStatus;
 import com.example.restaurantmanagement.model.order.OrderCreateDto;
 import com.example.restaurantmanagement.model.order.OrderDto;
+import com.example.restaurantmanagement.model.order.OrderUpdateDto;
 import com.example.restaurantmanagement.model.order.UpdateStatusDto;
 import com.example.restaurantmanagement.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -48,6 +48,8 @@ public class OrderController {
         orderService.updateOrderStatus(orderId, updateStatusDto);
     }
 
-
-
+    @PutMapping("/{orderId}")
+    public void updateOrder(@PathVariable String orderId , @RequestBody OrderUpdateDto orderUpdateDto){
+        orderService.updateOrder(orderId , orderUpdateDto);
+    }
 }
