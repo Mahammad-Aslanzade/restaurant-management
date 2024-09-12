@@ -24,9 +24,9 @@ public class BannerController {
         return bannerService.getAllBanners();
     }
 
-    @GetMapping("/{bannerName}")
-    public BannerDto getByName(@PathVariable String bannerName){
-        return bannerService.getByName(bannerName);
+    @GetMapping("/{bannerId}")
+    public BannerDto getById(@PathVariable String bannerId){
+        return bannerService.getById(bannerId);
     }
 
     @PostMapping
@@ -35,14 +35,14 @@ public class BannerController {
         bannerService.createBanner(bannerReqDto);
     }
 
-    @PutMapping("/{bannerName}")
-    public void updateBanner(@PathVariable String bannerName , @ModelAttribute BannerReqDto bannerReqDto){
-        bannerService.updateBanner(bannerName , bannerReqDto);
+    @PutMapping("/{bannerId}")
+    public void updateBanner(@PathVariable String bannerId , @ModelAttribute BannerReqDto bannerReqDto){
+        bannerService.updateBanner(bannerId , bannerReqDto);
     }
 
-    @DeleteMapping("/{bannerName}")
+    @DeleteMapping("/{bannerId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteBanner(@PathVariable String bannerName){
-        bannerService.deleteBanner(bannerName);
+    public void deleteBanner(@PathVariable String bannerId){
+        bannerService.deleteBanner(bannerId);
     }
 }

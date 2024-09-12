@@ -33,21 +33,21 @@ public class BannerService {
         return bannerDtoList;
     }
 
-    private BannerEntity getBannerEntity(String bannerName) {
-        return bannerRepository.getBannerEntityByNameIgnoreCase(bannerName)
+    private BannerEntity getBannerEntity(String bannerId) {
+        return bannerRepository.findById(bannerId)
                 .orElseThrow(() ->
                         new NotFoundException(
                                 ExceptionDetails.BANNER_NOT_FOUND.message(),
-                                ExceptionDetails.BANNER_NOT_FOUND.createLogMessage("getByName", "name", bannerName)
+                                ExceptionDetails.BANNER_NOT_FOUND.createLogMessage("getById", bannerId)
                         )
                 );
     }
 
-    public BannerDto getByName(String name) {
-        log.info("ACTION.getByName.start name : {}", name);
-        BannerEntity bannerEntity = getBannerEntity(name);
+    public BannerDto getById(String id) {
+        log.info("ACTION.getById.start id : {}", id);
+        BannerEntity bannerEntity = getBannerEntity(id);
         BannerDto bannerDto = bannerMapper.mapToDto(bannerEntity);
-        log.info("ACTION.getByName.end name : {}", name);
+        log.info("ACTION.getById.end id : {}", id);
         return bannerDto;
     }
 
@@ -59,33 +59,33 @@ public class BannerService {
             );
         }
         BannerEntity bannerEntity = bannerMapper.mapToEntity(bannerReqDto);
-        String imageUrl = imageService.upLoadImageAndGetPath(bannerReqDto.getImage());
+        String imageUrl = imageService.upLoadImageAndGetUrl(bannerReqDto.getImage());
         bannerEntity.setImage(imageUrl);
         bannerRepository.save(bannerEntity);
     }
 
-    public void updateBanner(String bannerName, BannerReqDto bannerReqDto) {
-        log.info("ACTION.updateBanner.start bannerName : {} | reqBody : {}", bannerName, bannerReqDto);
-        BannerEntity bannerOld = getBannerEntity(bannerName);
+    public void updateBanner(String bannerId, BannerReqDto bannerReqDto) {
+        log.info("ACTION.updateBanner.start bannerId : {} | reqBody : {}", bannerId, bannerReqDto);
+        BannerEntity bannerOld = getBannerEntity(bannerId);
         BannerEntity bannerNew = bannerMapper.mapToEntity(bannerReqDto);
         if (bannerReqDto.getImage() == null) {
             bannerNew.setImage(bannerOld.getImage());
         } else {
-            String imageUrl = imageService.upLoadImageAndGetPath(bannerReqDto.getImage());
+            String imageUrl = imageService.upLoadImageAndGetUrl(bannerReqDto.getImage());
             bannerNew.setImage(imageUrl);
             imageService.deleteImage(bannerOld.getImage());
         }
         bannerNew.setId(bannerOld.getId());
         bannerRepository.save(bannerNew);
-        log.info("ACTION.updateBanner.end bannerName : {} | reqBody : {}", bannerName, bannerReqDto);
+        log.info("ACTION.updateBanner.end bannerId : {} | reqBody : {}", bannerId, bannerReqDto);
     }
 
-    public void deleteBanner(String bannerName) {
-        log.info("ACTION.deleteBanner.start bannerName : {}", bannerName);
-        BannerEntity banner = getBannerEntity(bannerName);
+    public void deleteBanner(String bannerId) {
+        log.info("ACTION.deleteBanner.start bannerId : {}", bannerId);
+        BannerEntity banner = getBannerEntity(bannerId);
         imageService.deleteImage(banner.getImage());
         bannerRepository.delete(banner);
-        log.info("ACTION.deleteBanner.end bannerName : {}", bannerName);
+        log.info("ACTION.deleteBanner.end bannerId : {}", bannerId);
     }
 
 }

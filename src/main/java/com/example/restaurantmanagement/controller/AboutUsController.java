@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/aboutUs")
+@CrossOrigin("*")
 public class AboutUsController {
 
     private final AboutUsService aboutUsService;

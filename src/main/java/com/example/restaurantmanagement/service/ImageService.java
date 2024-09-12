@@ -19,8 +19,9 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class ImageService {
     private final String FOLDER_PATH = System.getProperty("user.dir") + "/uploads/";
+    private final String SERVER_URL = "http://localhost:8080/uploads/";
 
-    public Resource getImage(String fileName){
+    public Resource getImage(String fileName) {
         Path path = Paths.get(String.format("C:/Users/Mahammad/Desktop/Java-Project/restaurant-management/uploads/%s", fileName));
         try {
             Resource resource = new UrlResource(path.toUri());
@@ -32,7 +33,7 @@ public class ImageService {
         return null;
     }
 
-    public String upLoadImageAndGetPath(MultipartFile file){
+    public String upLoadImageAndGetUrl(MultipartFile file) {
         if (file == null || file.isEmpty()) {
             throw new RuntimeException("FILE_IS_NULL");
         }
@@ -57,7 +58,7 @@ public class ImageService {
         }
 
         // ImageController will apply getImage method
-        return "http://localhost:8080/uploads/" + savedFileName;
+        return SERVER_URL + savedFileName;
     }
 
     private String getExtension(String filename) {
@@ -68,11 +69,24 @@ public class ImageService {
 
     public void deleteImage(String filePath) {
         if (filePath == null) return;
+        filePath = this.getImagePath(filePath);
         Path path = Paths.get(filePath);
         try {
             Files.delete(path);
         } catch (IOException e) {
-            throw new RuntimeException( "IMAGE_CANNOT_DELETED");
+            throw new RuntimeException("IMAGE_CANNOT_DELETED");
+        }
+    }
+
+    public String getImagePath(String imageUrl) {
+        String toRemove = SERVER_URL;
+        // Check if the original string contains the part you want to remove
+        if (imageUrl.contains(toRemove)) {
+            int startIndex = imageUrl.indexOf(toRemove) + toRemove.length();
+            String remaining = imageUrl.substring(startIndex);
+            return FOLDER_PATH + remaining;
+        } else {
+            throw new RuntimeException("Image Path not found!!!");
         }
     }
 

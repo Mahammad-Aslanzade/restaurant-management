@@ -55,7 +55,7 @@ public class MealService {
         mealReqDto.getIngredientsList().forEach(System.out::println);
         MealEntity mealEntity = mealMapper.mapToEntity(mealReqDto);
 
-        String imageUrl = imageService.upLoadImageAndGetPath(mealReqDto.getImage());
+        String imageUrl = imageService.upLoadImageAndGetUrl(mealReqDto.getImage());
         mealEntity.setImage(imageUrl);
 
         MealCategoryEntity category = mealCategoryService.getCategoryEntity(mealReqDto.getCategoryId());
@@ -77,7 +77,7 @@ public class MealService {
         if (mealReqDto.getImage() == null) {
             updatedMeal.setImage(oldMeal.getImage());
         } else {
-            String imageUrl = imageService.upLoadImageAndGetPath(mealReqDto.getImage());
+            String imageUrl = imageService.upLoadImageAndGetUrl(mealReqDto.getImage());
             updatedMeal.setImage(imageUrl);
             imageService.deleteImage(oldMeal.getImage());
         }

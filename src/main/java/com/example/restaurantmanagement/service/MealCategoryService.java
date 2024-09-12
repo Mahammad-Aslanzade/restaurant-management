@@ -52,7 +52,7 @@ public class MealCategoryService {
     public void createMealCategory(MealCategoryReqDto mealCategoryReqDto) {
         log.info("ACTION.createMealCategory.start requestBody : {}", mealCategoryReqDto);
         MealCategoryEntity mealCategoryEntity = mealCategoryMapper.mapToEntity(mealCategoryReqDto);
-        String imageUrl = imageService.upLoadImageAndGetPath(mealCategoryReqDto.getImage());
+        String imageUrl = imageService.upLoadImageAndGetUrl(mealCategoryReqDto.getImage());
         mealCategoryEntity.setImage(imageUrl);
         mealCategoryRepository.save(mealCategoryEntity);
         log.info("ACTION.createMealCategory.end requestBody : {}", mealCategoryReqDto);
@@ -67,7 +67,7 @@ public class MealCategoryService {
         if (mealCategoryReqDto.getImage() == null) {
             updatedMealCategory.setImage(oldMealCategory.getImage());
         } else {
-            String imageUrl = imageService.upLoadImageAndGetPath(mealCategoryReqDto.getImage());
+            String imageUrl = imageService.upLoadImageAndGetUrl(mealCategoryReqDto.getImage());
             updatedMealCategory.setImage(imageUrl);
             imageService.deleteImage(oldMealCategory.getImage());
         }
