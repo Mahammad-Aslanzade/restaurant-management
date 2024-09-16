@@ -74,7 +74,7 @@ public class ImageService {
         try {
             Files.delete(path);
         } catch (IOException e) {
-            throw new RuntimeException("IMAGE_CANNOT_DELETED");
+            System.out.println("IMAGE_CANNOT_DELETED");
         }
     }
 

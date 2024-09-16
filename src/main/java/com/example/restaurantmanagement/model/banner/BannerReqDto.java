@@ -14,6 +14,4 @@ public class BannerReqDto {
     private String name;
     @NotNull(message = "text cann't be null")
     private String text;
-    @NotNull(message = "image cann't be null")
-    private MultipartFile image;
 }

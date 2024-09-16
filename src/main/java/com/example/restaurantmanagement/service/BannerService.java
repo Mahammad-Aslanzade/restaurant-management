@@ -11,6 +11,7 @@ import com.example.restaurantmanagement.model.banner.BannerReqDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -51,7 +52,7 @@ public class BannerService {
         return bannerDto;
     }
 
-    public void createBanner(BannerReqDto bannerReqDto) {
+    public void createBanner(MultipartFile image , BannerReqDto bannerReqDto) {
         if (bannerRepository.getBannerEntityByNameIgnoreCase(bannerReqDto.getName()).isPresent()) {
             throw new AlreadyExistException(
                     ExceptionDetails.ALREADY_EXIST.message(),
@@ -59,19 +60,19 @@ public class BannerService {
             );
         }
         BannerEntity bannerEntity = bannerMapper.mapToEntity(bannerReqDto);
-        String imageUrl = imageService.upLoadImageAndGetUrl(bannerReqDto.getImage());
+        String imageUrl = imageService.upLoadImageAndGetUrl(image);
         bannerEntity.setImage(imageUrl);
         bannerRepository.save(bannerEntity);
     }
 
-    public void updateBanner(String bannerId, BannerReqDto bannerReqDto) {
+    public void updateBanner(String bannerId, MultipartFile image , BannerReqDto bannerReqDto) {
         log.info("ACTION.updateBanner.start bannerId : {} | reqBody : {}", bannerId, bannerReqDto);
         BannerEntity bannerOld = getBannerEntity(bannerId);
         BannerEntity bannerNew = bannerMapper.mapToEntity(bannerReqDto);
-        if (bannerReqDto.getImage() == null) {
+        if (image == null) {
             bannerNew.setImage(bannerOld.getImage());
         } else {
-            String imageUrl = imageService.upLoadImageAndGetUrl(bannerReqDto.getImage());
+            String imageUrl = imageService.upLoadImageAndGetUrl(image);
             bannerNew.setImage(imageUrl);
             imageService.deleteImage(bannerOld.getImage());
         }

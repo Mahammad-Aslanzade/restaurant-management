@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/table")
+@CrossOrigin("*")
 public class TableController {
 
     private final TableService tableService;

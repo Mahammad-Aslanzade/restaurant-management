@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -31,13 +32,13 @@ public class BannerController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createBanner(@ModelAttribute @Valid BannerReqDto bannerReqDto){
-        bannerService.createBanner(bannerReqDto);
+    public void createBanner(@RequestPart("image") MultipartFile image , @RequestPart("bannerDetail") @Valid BannerReqDto bannerReqDto){
+        bannerService.createBanner(image , bannerReqDto);
     }
 
     @PutMapping("/{bannerId}")
-    public void updateBanner(@PathVariable String bannerId , @ModelAttribute BannerReqDto bannerReqDto){
-        bannerService.updateBanner(bannerId , bannerReqDto);
+    public void updateBanner(@PathVariable String bannerId , @RequestPart(value = "image",required = false) MultipartFile image , @RequestPart("bannerDetail") @Valid BannerReqDto bannerReqDto){
+        bannerService.updateBanner(bannerId , image , bannerReqDto);
     }
 
     @DeleteMapping("/{bannerId}")
