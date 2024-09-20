@@ -23,5 +23,6 @@ public class UserCreateDto {
     private String email;
     @Pattern(regexp = "\\+994\\d{9}", message = "Phone number must be in the format +994xxxxxxxxx")
     private String phoneNumber;
+    private String password;
     private LocalDate birthDate;
 }

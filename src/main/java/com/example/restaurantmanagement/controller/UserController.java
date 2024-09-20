@@ -1,5 +1,6 @@
 package com.example.restaurantmanagement.controller;
 
+import com.example.restaurantmanagement.enums.Role;
 import com.example.restaurantmanagement.model.user.UserCreateDto;
 import com.example.restaurantmanagement.model.user.UserDto;
 import com.example.restaurantmanagement.model.user.UserUpdateDto;
@@ -38,9 +39,14 @@ public class UserController {
         return emailVerificationService.verifyEmail(email);
     }
 
-    @PostMapping
-    public void createUser(@RequestBody @Valid UserCreateDto userCreateDto) {
-        userService.createUser(userCreateDto);
+    @PostMapping("/register/oridinary")
+    public UserDto createNormalUser(@RequestBody @Valid UserCreateDto userCreateDto) {
+        return userService.createUser(userCreateDto , Role.USER);
+    }
+
+    @PostMapping("/register/admin")
+    public UserDto createAmin(@RequestBody @Valid UserCreateDto userCreateDto) {
+        return userService.createUser(userCreateDto , Role.ADMIN);
     }
 
     @PutMapping("/{userId}")

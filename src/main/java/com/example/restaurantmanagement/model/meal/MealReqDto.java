@@ -14,7 +14,6 @@ import java.util.List;
 public class MealReqDto {
     @NotNull(message = "title cann't be null")
     private String title;
-    private MultipartFile image;
     @NotNull(message = "ingredientsList cann't be null , you can set empty [] if nothing exist")
     private List<String> ingredientsList;
     @NotNull(message = "categoryId cann't be null")

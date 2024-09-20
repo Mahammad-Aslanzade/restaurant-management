@@ -6,8 +6,8 @@ import com.example.restaurantmanagement.service.MealService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -32,13 +32,13 @@ public class MealController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createMeal(@ModelAttribute @Valid MealReqDto mealReqDto) {
-        mealService.createMeal(mealReqDto);
+    public void createMeal(@RequestPart("image") MultipartFile image, @RequestPart("mealDetails") @Valid MealReqDto mealReqDto) {
+        mealService.createMeal(image, mealReqDto);
     }
 
     @PutMapping("/{mealId}")
-    public void updateMeal(@PathVariable String mealId, @Valid @ModelAttribute MealReqDto mealReqDto , BindingResult bindingResult) {
-        mealService.updateMeal(mealId, mealReqDto);
+    public void updateMeal(@PathVariable String mealId, @RequestPart(value = "image",required = false) MultipartFile image, @RequestPart("mealDetails") @Valid MealReqDto mealReqDto) {
+        mealService.updateMeal(mealId, image , mealReqDto);
     }
 
     @DeleteMapping("/{mealId}")

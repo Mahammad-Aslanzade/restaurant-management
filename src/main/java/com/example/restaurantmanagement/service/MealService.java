@@ -11,8 +11,8 @@ import com.example.restaurantmanagement.model.meal.MealReqDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.*;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -50,12 +50,12 @@ public class MealService {
         return mealDto;
     }
 
-    public void createMeal(MealReqDto mealReqDto) {
+    public void createMeal(MultipartFile image, MealReqDto mealReqDto) {
         log.info("ACTION.createMeal.start requestBody : {}", mealReqDto);
         mealReqDto.getIngredientsList().forEach(System.out::println);
         MealEntity mealEntity = mealMapper.mapToEntity(mealReqDto);
 
-        String imageUrl = imageService.upLoadImageAndGetUrl(mealReqDto.getImage());
+        String imageUrl = imageService.upLoadImageAndGetUrl(image);
         mealEntity.setImage(imageUrl);
 
         MealCategoryEntity category = mealCategoryService.getCategoryEntity(mealReqDto.getCategoryId());
@@ -65,7 +65,7 @@ public class MealService {
         log.info("ACTION.createMeal.end requestBody : {}", mealReqDto);
     }
 
-    public void updateMeal(String mealId, MealReqDto mealReqDto) {
+    public void updateMeal(String mealId, MultipartFile image, MealReqDto mealReqDto) {
         log.info("ACTION.updateMeal.start requestBody : {}", mealReqDto);
         MealEntity oldMeal = getMealEntity(mealId);
         MealEntity updatedMeal = mealMapper.mapToEntity(mealReqDto);
@@ -74,10 +74,10 @@ public class MealService {
         MealCategoryEntity mealCategory = mealCategoryService.getCategoryEntity(mealReqDto.getCategoryId());
         updatedMeal.setCategory(mealCategory);
 
-        if (mealReqDto.getImage() == null) {
+        if (image == null) {
             updatedMeal.setImage(oldMeal.getImage());
         } else {
-            String imageUrl = imageService.upLoadImageAndGetUrl(mealReqDto.getImage());
+            String imageUrl = imageService.upLoadImageAndGetUrl(image);
             updatedMeal.setImage(imageUrl);
             imageService.deleteImage(oldMeal.getImage());
         }

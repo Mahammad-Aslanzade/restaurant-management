@@ -3,9 +3,13 @@ CREATE TABLE users
     id           character varying(36) PRIMARY KEY,
     name         character varying        NOT NULL,
     surname      character varying,
+    username     character varying        NOT NULL,
+    password     character varying        NOT NULL,
     birth_date   date,
     email        character varying UNIQUE NOT NULL,
-    phone_number character varying(13)
+    phone_number character varying(13),
+    created_at   date,
+    role         character varying        NOT NULL check ( role in ('USER', 'MODERATOR', 'ADMIN'))
 );
 
 CREATE TABLE email_verifications
