@@ -1,6 +1,7 @@
 package com.example.restaurantmanagement.configuration;
 
 
+import com.example.restaurantmanagement.enums.Role;
 import com.example.restaurantmanagement.util.JwtRequestFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
     private final JwtRequestFilter jwtRequestFilter;
 
     @Bean
@@ -29,7 +31,8 @@ public class SecurityConfig {
         http
 
                 .authorizeHttpRequests((requests) -> requests
-                                .requestMatchers(HttpMethod.POST, "/user/**").permitAll()
+                                .requestMatchers("/user").hasAuthority(Role.ADMIN.name())
+                                .requestMatchers("/user/register/ordinary").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
 //                        .requestMatchers("/api/**").hasAnyRole("ADMIN", "USER")
                                 .anyRequest().authenticated()

@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
+import java.time.Instant;
+
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,6 +18,8 @@ public class FeedbackDto {
     private Float rate;
     private MealDto meal;
     private UserInfoDto user;
+    private Instant createdAt;
+    private Instant updatedAt;
 
     @Data
     public static class UserInfoDto{

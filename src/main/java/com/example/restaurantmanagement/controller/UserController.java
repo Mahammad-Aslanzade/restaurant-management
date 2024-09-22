@@ -39,8 +39,9 @@ public class UserController {
         return emailVerificationService.verifyEmail(email);
     }
 
-    @PostMapping("/register/oridinary")
+    @PostMapping("/register/ordinary")
     public UserDto createNormalUser(@RequestBody @Valid UserCreateDto userCreateDto) {
+        System.out.println("salam--");
         return userService.createUser(userCreateDto , Role.USER);
     }
 

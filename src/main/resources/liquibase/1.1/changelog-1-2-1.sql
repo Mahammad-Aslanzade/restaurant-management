@@ -3,12 +3,12 @@ CREATE TABLE users
     id           character varying(36) PRIMARY KEY,
     name         character varying        NOT NULL,
     surname      character varying,
-    username     character varying        NOT NULL,
     password     character varying        NOT NULL,
     birth_date   date,
     email        character varying UNIQUE NOT NULL,
     phone_number character varying(13),
-    created_at   date,
+    created_at   TIMESTAMPTZ              NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at   TIMESTAMPTZ,
     role         character varying        NOT NULL check ( role in ('USER', 'MODERATOR', 'ADMIN'))
 );
 
@@ -36,12 +36,14 @@ CREATE TABLE addresses
 
 CREATE TABLE feedbacks
 (
-    id      character varying(36) PRIMARY KEY,
-    text    character varying,
-    rate    float,
-    meal_id character varying,
+    id         character varying(36) PRIMARY KEY,
+    text       character varying,
+    rate       float,
+    meal_id    character varying,
     FOREIGN KEY (meal_id) REFERENCES meals (id),
     check ( rate >= 0 AND rate <= 5),
-    user_id character varying(36),
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    user_id    character varying(36),
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ
 )
