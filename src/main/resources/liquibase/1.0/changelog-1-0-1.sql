@@ -1,8 +1,26 @@
-create table about_us
+CREATE TABLE meal_categories
 (
-    id             int primary key,
-    restaurant_name character varying,
-    address        character varying,
-    number         character varying(8),
-    email          character varying
+    id    character varying(36) PRIMARY KEY,
+    title character varying NOT NULL,
+    image character varying
 );
+
+CREATE TABLE meals
+(
+    id            character varying(36) PRIMARY KEY,
+    title         character varying NOT NULL,
+    ingredients   character varying,
+    category      character varying(36),
+    foreign key (category) references meal_categories (id),
+    image         character varying,
+    description   character varying,
+    carbohydrates float,
+    calories      float,
+    fat           float,
+    gram          float,
+    protein       float,
+    price         float,
+    sale_price     float,
+    rate          float
+)
+;

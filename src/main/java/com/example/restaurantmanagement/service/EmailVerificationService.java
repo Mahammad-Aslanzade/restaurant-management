@@ -60,7 +60,6 @@ public class EmailVerificationService {
                 "Restaurant App Verification",
                 templateName, context
         );
-
         //We save details to database at the end
         //Because it can be some problem during sending email
         EmailVerificationEntity verificatedEntity = new EmailVerificationEntity();

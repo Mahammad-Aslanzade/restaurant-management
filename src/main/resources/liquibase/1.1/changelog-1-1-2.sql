@@ -1,0 +1,6 @@
+ALTER TABLE reservations
+    drop column time,
+    ADD COLUMN created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    ADD COLUMN updated_at TIMESTAMPTZ,
+    ADD COLUMN arrival_time TIMESTAMP NOT NULL,
+    ADD COLUMN leaving_time TIMESTAMP NOT NULL;

@@ -18,6 +18,8 @@ public class ReservationDto {
     private String note;
     private Integer peopleCount;
     private LocalDateTime time;
+    private LocalDateTime arrivalTime;
+    private LocalDateTime leavingTime;
 
     @Data
     public static class UserInfoDto{

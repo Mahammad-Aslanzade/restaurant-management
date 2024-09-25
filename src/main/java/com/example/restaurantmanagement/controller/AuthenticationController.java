@@ -33,17 +33,17 @@ public class AuthenticationController {
     public ResponseEntity<?> createAuthenticationToken(@RequestBody LoginRequest authenticationRequest) throws Exception {
         try {
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
+                    new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword())
             );
         } catch (BadCredentialsException e) {
             throw new Exception("Incorrect username or password", e);
         }
 
         final UserDetails userDetails = userDetailsService
-                .loadUserByUsername(authenticationRequest.getUsername());
+                .loadUserByUsername(authenticationRequest.getEmail());
 
         final String jwt = jwtTokenUtil.generateToken(userDetails);
-        UserEntity user = userRepository.findByEmail(authenticationRequest.getUsername())
+        UserEntity user = userRepository.findByEmail(authenticationRequest.getEmail())
                 .orElseThrow(()-> new RuntimeException("USER_NOT_FOUND"));
         return ResponseEntity.ok(new TokenResponse(jwt , user.getRole()));
     }

@@ -47,6 +47,16 @@ public class UserService {
         );
     }
 
+    public UserEntity getUserEntityByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(
+                () -> new NotFoundException(
+                        ExceptionDetails.USER_NOT_FOUND.message(),
+                        ExceptionDetails.USER_NOT_FOUND.createLogMessage("getUserEntity", "email", email)
+                )
+        );
+    }
+
+
     public UserDto getUserById(String userId) {
         log.info("ACTION.getUserById.start userId : {}", userId);
         UserEntity userEntity = getUserEntity(userId);
@@ -55,16 +65,16 @@ public class UserService {
         return userDto;
     }
 
-    public UserDto createUser(UserCreateDto userCreateDto , Role role) {
-    log.info("ACTION.createUser.start requestBody : {}", userCreateDto);
+    public UserDto createUser(UserCreateDto userCreateDto, Role role) {
+        log.info("ACTION.createUser.start requestBody : {}", userCreateDto);
 
-    // Checking user table if any same email exist
-    if (userRepository.findByEmail(userCreateDto.getEmail()).isPresent()) {
-        throw new AlreadyExistException(
-                ExceptionDetails.THIS_EMAIL_IS_ALREADY_EXIST.message(),
-                ExceptionDetails.THIS_EMAIL_IS_ALREADY_EXIST.createLogMessage("createUser", "email", userCreateDto.getEmail())
-        );
-    }
+        // Checking user table if any same email exist
+        if (userRepository.findByEmail(userCreateDto.getEmail()).isPresent()) {
+            throw new AlreadyExistException(
+                    ExceptionDetails.THIS_EMAIL_IS_ALREADY_EXIST.message(),
+                    ExceptionDetails.THIS_EMAIL_IS_ALREADY_EXIST.createLogMessage("createUser", "email", userCreateDto.getEmail())
+            );
+        }
 //
 //    // Check code is valid
 //    Boolean isValidForReg = emailVerificationService.checkValidCode(
@@ -80,15 +90,15 @@ public class UserService {
 //        );
 //    }
 
-    UserEntity userEntity = userMapper.mapToEntity(userCreateDto);
-    userEntity.setId(UUID.randomUUID().toString());
-    userEntity.setRole(role);
-    userEntity.setPassword(passwordEncoder.encode(userCreateDto.getPassword()));
-    userRepository.save(userEntity);
+        UserEntity userEntity = userMapper.mapToEntity(userCreateDto);
+        userEntity.setId(UUID.randomUUID().toString());
+        userEntity.setRole(role);
+        userEntity.setPassword(passwordEncoder.encode(userCreateDto.getPassword()));
+        userRepository.save(userEntity);
 //    emailVerificationService.changeStatus(userCreateDto.getEmail(), VerificationStatus.VERIFICATED);
-    log.info("ACTION.createUser.end requestBody : {}", userCreateDto);
-    return userMapper.mapToDto(userEntity);
-}
+        log.info("ACTION.createUser.end requestBody : {}", userCreateDto);
+        return userMapper.mapToDto(userEntity);
+    }
 
 
     public void updateUser(String userId, UserUpdateDto userUpdateDto) {
@@ -126,7 +136,7 @@ public class UserService {
         );
     }
 
-    public UserDto registerUser(UserCreateDto userCreateDto , Role role) {
+    public UserDto registerUser(UserCreateDto userCreateDto, Role role) {
         UserEntity user = userMapper.mapToEntity(userCreateDto);
         String password = passwordEncoder.encode(userCreateDto.getPassword());
         user.setId(UUID.randomUUID().toString());
