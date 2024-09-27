@@ -91,7 +91,6 @@ public class UserService {
 //    }
 
         UserEntity userEntity = userMapper.mapToEntity(userCreateDto);
-        userEntity.setId(UUID.randomUUID().toString());
         userEntity.setRole(role);
         userEntity.setPassword(passwordEncoder.encode(userCreateDto.getPassword()));
         userRepository.save(userEntity);

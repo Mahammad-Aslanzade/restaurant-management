@@ -1,9 +1,6 @@
 package com.example.restaurantmanagement.controller;
 
-import com.example.restaurantmanagement.exceptions.AlreadyExistException;
-import com.example.restaurantmanagement.exceptions.InvalidException;
-import com.example.restaurantmanagement.exceptions.IsNotValidForRegister;
-import com.example.restaurantmanagement.exceptions.NotFoundException;
+import com.example.restaurantmanagement.exceptions.*;
 import com.example.restaurantmanagement.model.exception.AlreadyExistDto;
 import com.example.restaurantmanagement.model.exception.InvalidExceptionDto;
 import com.example.restaurantmanagement.model.exception.IsNotValidRegDto;
@@ -28,11 +25,11 @@ public class ErrorHandler {
     public HashMap<String, String> handleValidations(MethodArgumentNotValidException ex) {
         HashMap<String, String> errorList = new HashMap<>();
         List<FieldError> errors = ex.getBindingResult().getFieldErrors();
-        errors.forEach((e) -> {
+        errors.forEach((e) ->
             errorList.put(
                     e.getField(), e.getDefaultMessage()
-            );
-        });
+            )
+        );
         return errorList;
     }
 
@@ -63,12 +60,21 @@ public class ErrorHandler {
 
     @ExceptionHandler(InvalidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public InvalidExceptionDto handleInvalidParameter(InvalidException exception){
+    public InvalidExceptionDto handleInvalidParameter(InvalidException exception) {
         log.error(exception.getLogMessage());
         return new InvalidExceptionDto(
                 exception.getParameter(),
                 exception.getMessage()
         );
+    }
+
+    @ExceptionHandler(NotAllowedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public HashMap<String, String> handleNotAllowedMessage(NotAllowedException exception) {
+        log.error(exception.getLogMessage());
+        HashMap<String , String> response = new HashMap<>();
+        response.put("message", exception.getMessage());
+        return response;
     }
 
 

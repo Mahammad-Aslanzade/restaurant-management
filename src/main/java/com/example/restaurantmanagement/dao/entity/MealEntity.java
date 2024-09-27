@@ -34,6 +34,8 @@ public class MealEntity {
     private Double price;
     private Double salePrice;
     private Double rate;
+    @OneToMany(mappedBy = "meal" , cascade = CascadeType.ALL , orphanRemoval = true)
+    private List<FeedbackEntity> feedbackEntities;
     @OneToOne
     @JoinColumn(name = "category")
     private MealCategoryEntity category;

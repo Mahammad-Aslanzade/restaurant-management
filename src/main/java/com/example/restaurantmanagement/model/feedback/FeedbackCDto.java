@@ -20,8 +20,6 @@ public class FeedbackCDto {
     private Float rate;
     @NotNull
     private String mealId;
-    @NotNull
-    private String userId;
 }
 
 

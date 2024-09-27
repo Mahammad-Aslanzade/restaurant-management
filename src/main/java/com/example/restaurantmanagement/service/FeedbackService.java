@@ -5,6 +5,8 @@ import com.example.restaurantmanagement.dao.entity.MealEntity;
 import com.example.restaurantmanagement.dao.entity.UserEntity;
 import com.example.restaurantmanagement.dao.repository.FeedbackRepository;
 import com.example.restaurantmanagement.enums.ExceptionDetails;
+import com.example.restaurantmanagement.enums.Role;
+import com.example.restaurantmanagement.exceptions.NotAllowedException;
 import com.example.restaurantmanagement.exceptions.NotFoundException;
 import com.example.restaurantmanagement.mapper.FeedbackMapper;
 import com.example.restaurantmanagement.model.feedback.FeedbackCDto;
@@ -26,6 +28,7 @@ public class FeedbackService {
 
     private final UserService userService;
     private final MealService mealService;
+    private final MyUserDetailService myUserDetailService;
 
     public List<FeedbackDto> getAllFeedbacks() {
         log.info("ACTION.getAllFeedbacks.start");
@@ -64,7 +67,7 @@ public class FeedbackService {
     public void postFeedback(FeedbackCDto feedBackCDto) {
         log.info("ACTION.postFeedback.start requestBody : {}", feedBackCDto);
         FeedbackEntity feedbackEntity = feedbackMapper.mapToEntity(feedBackCDto);
-        UserEntity user = userService.getUserEntity(feedBackCDto.getUserId());
+        UserEntity user = myUserDetailService.getCurrentAuthenticatedUser();
         MealEntity meal = mealService.getMealEntity(feedBackCDto.getMealId());
         feedbackEntity.setUser(user);
         feedbackEntity.setMeal(meal);
@@ -74,8 +77,15 @@ public class FeedbackService {
 
     public void updateFeedback(String feedbackId, FeedbackUDto feedbackUDto) {
         log.info("ACTION.updateFeedback.start id : {} | requestBody : {}", feedbackId, feedbackUDto);
-        FeedbackEntity oldFeedback = getFeedbackEntity(feedbackId);
         FeedbackEntity updatedFeedback = feedbackMapper.mapToEntity(feedbackUDto);
+        FeedbackEntity oldFeedback = getFeedbackEntity(feedbackId);
+        UserEntity currentUser = myUserDetailService.getCurrentAuthenticatedUser();
+        if (!(currentUser == oldFeedback.getUser() || currentUser.getRole() == Role.ADMIN)){
+            throw new NotAllowedException(
+                    "You are not allowed to update this feedback",
+                    String.format("ACTION.ERROR.updateFeedBack userId : %s | feedbackId : %s", currentUser.getId() , oldFeedback.getId())
+            );
+        }
         updatedFeedback.setId(oldFeedback.getId());
         updatedFeedback.setUser(oldFeedback.getUser());
         feedbackRepository.save(updatedFeedback);
