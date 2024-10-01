@@ -2,8 +2,10 @@ package com.example.restaurantmanagement.controller;
 
 import com.example.restaurantmanagement.model.meal.MealDto;
 import com.example.restaurantmanagement.model.meal.MealReqDto;
+import com.example.restaurantmanagement.service.ImageService;
 import com.example.restaurantmanagement.service.MealService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,7 @@ import java.util.List;
 public class MealController {
 
     private final MealService mealService;
+    private final ImageService imageService;
 
     @GetMapping
     public List<MealDto> getAllMeals() {
@@ -32,6 +35,7 @@ public class MealController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void createMeal(@RequestPart("image") MultipartFile image, @RequestPart("mealDetails") @Valid MealReqDto mealReqDto) {
+        imageService.imageValidator(image);
         mealService.createMeal(image, mealReqDto);
     }
 

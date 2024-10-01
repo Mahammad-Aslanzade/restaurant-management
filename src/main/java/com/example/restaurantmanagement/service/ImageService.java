@@ -1,5 +1,6 @@
 package com.example.restaurantmanagement.service;
 
+import com.example.restaurantmanagement.exceptions.NullFieldException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -19,7 +20,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class ImageService {
     private final String FOLDER_PATH = System.getProperty("user.dir") + "/uploads/";
-    private final String SERVER_URL = "http://localhost:8080/uploads/";
+    private final String SERVER_URL = "http://localhost:8080/api/uploads/";
 
     public Resource getImage(String fileName) {
         Path path = Paths.get(String.format("C:/Users/Mahammad/Desktop/Java-Project/restaurant-management/uploads/%s", fileName));
@@ -88,6 +89,15 @@ public class ImageService {
         } else {
             throw new RuntimeException("Image Path not found!!!");
         }
+    }
+
+    public void imageValidator(MultipartFile image){
+        if(image == null || image.isEmpty())
+            throw new NullFieldException(
+                    "image cann't be null",
+                    "ACTION.ERROR.imageValidator | field is null in request body"
+            );
+
     }
 
 

@@ -77,5 +77,14 @@ public class ErrorHandler {
         return response;
     }
 
+    @ExceptionHandler(NullFieldException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public HashMap<String, String> handleNullField(NullFieldException exception) {
+        log.error(exception.getLogMessage());
+        HashMap<String, String> response = new HashMap<>();
+        response.put(exception.getField(), exception.getMessage());
+        return response;
+    }
+
 
 }
