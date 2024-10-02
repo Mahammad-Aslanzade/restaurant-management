@@ -2,8 +2,10 @@ package com.example.restaurantmanagement.service;
 
 import com.example.restaurantmanagement.dao.entity.MealCategoryEntity;
 import com.example.restaurantmanagement.dao.repository.MealCategoryRepository;
+import com.example.restaurantmanagement.dao.repository.MealRepository;
 import com.example.restaurantmanagement.enums.ExceptionDetails;
 import com.example.restaurantmanagement.exceptions.NotFoundException;
+import com.example.restaurantmanagement.exceptions.RelationExistException;
 import com.example.restaurantmanagement.mapper.MealCategoryMapper;
 import com.example.restaurantmanagement.model.mealCategory.MealCategoryDto;
 import com.example.restaurantmanagement.model.mealCategory.MealCategoryReqDto;
@@ -22,6 +24,7 @@ public class MealCategoryService {
     private final MealCategoryMapper mealCategoryMapper;
     private final MealCategoryRepository mealCategoryRepository;
     private final ImageService imageService;
+    private final MealRepository mealRepository;
 
     public List<MealCategoryDto> getAllCategories() {
         log.info("ACTION.getAllCategories.start");
@@ -78,8 +81,15 @@ public class MealCategoryService {
     public void deleteMealCategory(String categoryId) {
         log.info("ACTION.deleteMealCategory.start categoryId : {}", categoryId);
         MealCategoryEntity mealCategoryEntity = getCategoryEntity(categoryId);
-        imageService.deleteImage(mealCategoryEntity.getImage());
+        if (!mealRepository.findAllByCategory(mealCategoryEntity).isEmpty()) {
+            throw new RelationExistException(
+                    String.format("%s contains some meals !", mealCategoryEntity.getTitle()),
+                    String.format("ACTION.ERROR.deleteMealCategory id : %s | has relation", mealCategoryEntity.getId())
+            );
+        }
         mealCategoryRepository.delete(mealCategoryEntity);
+        imageService.deleteImage(mealCategoryEntity.getImage());
+
         log.info("ACTION.deleteMealCategory.end categoryId : {}", categoryId);
     }
 

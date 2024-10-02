@@ -49,6 +49,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests((requests) -> requests
                                 .requestMatchers("/user").hasAuthority(Role.ADMIN.name())
                                 .requestMatchers("/uploads/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/aboutUs").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/meal/**").permitAll()
+                                .requestMatchers(HttpMethod.GET , "/mealCategory/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/table/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/feedback/**").permitAll()
                                 .requestMatchers("/user/register/ordinary").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
 //                        .requestMatchers("/api/**").hasAnyRole("ADMIN", "USER")

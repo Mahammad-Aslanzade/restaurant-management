@@ -86,5 +86,15 @@ public class ErrorHandler {
         return response;
     }
 
+    @ExceptionHandler(RelationExistException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public HashMap<String, String> handleRelationExistException(RelationExistException exception){
+        log.error(exception.getLogMessage());
+        HashMap<String, String> response = new HashMap<>();
+        response.put("message" , exception.getMessage());
+        return response;
+    }
+
+
 
 }
