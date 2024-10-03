@@ -6,6 +6,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -18,6 +19,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "meals")
+@Document(indexName = "meals")
 public class MealEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

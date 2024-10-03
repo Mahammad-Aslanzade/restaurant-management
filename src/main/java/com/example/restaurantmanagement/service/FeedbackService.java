@@ -3,7 +3,7 @@ package com.example.restaurantmanagement.service;
 import com.example.restaurantmanagement.dao.entity.FeedbackEntity;
 import com.example.restaurantmanagement.dao.entity.MealEntity;
 import com.example.restaurantmanagement.dao.entity.UserEntity;
-import com.example.restaurantmanagement.dao.repository.FeedbackRepository;
+import com.example.restaurantmanagement.dao.repository.jpa.FeedbackRepository;
 import com.example.restaurantmanagement.enums.ExceptionDetails;
 import com.example.restaurantmanagement.enums.Role;
 import com.example.restaurantmanagement.exceptions.NotAllowedException;

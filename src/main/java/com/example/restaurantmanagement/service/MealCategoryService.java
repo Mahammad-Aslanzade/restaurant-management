@@ -1,8 +1,8 @@
 package com.example.restaurantmanagement.service;
 
 import com.example.restaurantmanagement.dao.entity.MealCategoryEntity;
-import com.example.restaurantmanagement.dao.repository.MealCategoryRepository;
-import com.example.restaurantmanagement.dao.repository.MealRepository;
+import com.example.restaurantmanagement.dao.repository.jpa.MealCategoryRepository;
+import com.example.restaurantmanagement.dao.repository.jpa.MealRepository;
 import com.example.restaurantmanagement.enums.ExceptionDetails;
 import com.example.restaurantmanagement.exceptions.NotFoundException;
 import com.example.restaurantmanagement.exceptions.RelationExistException;

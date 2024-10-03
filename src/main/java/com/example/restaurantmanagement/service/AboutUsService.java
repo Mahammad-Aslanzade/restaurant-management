@@ -1,7 +1,7 @@
 package com.example.restaurantmanagement.service;
 
 import com.example.restaurantmanagement.dao.entity.AboutUsEntity;
-import com.example.restaurantmanagement.dao.repository.AboutUsRepository;
+import com.example.restaurantmanagement.dao.repository.jpa.AboutUsRepository;
 import com.example.restaurantmanagement.exceptions.AlreadyExistException;
 import com.example.restaurantmanagement.exceptions.NotFoundException;
 import com.example.restaurantmanagement.mapper.AboutUsMapper;

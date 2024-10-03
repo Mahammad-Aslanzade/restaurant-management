@@ -1,8 +1,8 @@
 package com.example.restaurantmanagement.service;
 
 import com.example.restaurantmanagement.dao.entity.EmailVerificationEntity;
-import com.example.restaurantmanagement.dao.repository.EmailVerificationRepository;
-import com.example.restaurantmanagement.dao.repository.UserRepository;
+import com.example.restaurantmanagement.dao.repository.jpa.EmailVerificationRepository;
+import com.example.restaurantmanagement.dao.repository.jpa.UserRepository;
 import com.example.restaurantmanagement.enums.ExceptionDetails;
 import com.example.restaurantmanagement.enums.VerificationStatus;
 import com.example.restaurantmanagement.exceptions.AlreadyExistException;

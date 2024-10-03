@@ -1,4 +1,4 @@
-package com.example.restaurantmanagement.dao.repository;
+package com.example.restaurantmanagement.dao.repository.jpa;
 
 import com.example.restaurantmanagement.dao.entity.TableEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

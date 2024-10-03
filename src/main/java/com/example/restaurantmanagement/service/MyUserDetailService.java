@@ -1,7 +1,7 @@
 package com.example.restaurantmanagement.service;
 
 import com.example.restaurantmanagement.dao.entity.UserEntity;
-import com.example.restaurantmanagement.dao.repository.UserRepository;
+import com.example.restaurantmanagement.dao.repository.jpa.UserRepository;
 import com.example.restaurantmanagement.enums.Role;
 import com.example.restaurantmanagement.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;

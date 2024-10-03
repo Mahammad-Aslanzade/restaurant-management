@@ -1,7 +1,7 @@
 package com.example.restaurantmanagement.service;
 
 import com.example.restaurantmanagement.dao.entity.BannerEntity;
-import com.example.restaurantmanagement.dao.repository.BannerRepository;
+import com.example.restaurantmanagement.dao.repository.jpa.BannerRepository;
 import com.example.restaurantmanagement.enums.ExceptionDetails;
 import com.example.restaurantmanagement.exceptions.AlreadyExistException;
 import com.example.restaurantmanagement.exceptions.NotFoundException;
@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 @RequiredArgsConstructor

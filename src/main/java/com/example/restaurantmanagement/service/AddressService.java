@@ -2,7 +2,7 @@ package com.example.restaurantmanagement.service;
 
 import com.example.restaurantmanagement.dao.entity.AddressEntity;
 import com.example.restaurantmanagement.dao.entity.UserEntity;
-import com.example.restaurantmanagement.dao.repository.AddressRepository;
+import com.example.restaurantmanagement.dao.repository.jpa.AddressRepository;
 import com.example.restaurantmanagement.enums.Role;
 import com.example.restaurantmanagement.exceptions.InvalidException;
 import com.example.restaurantmanagement.exceptions.NotAllowedException;

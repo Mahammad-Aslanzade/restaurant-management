@@ -1,4 +1,4 @@
-package com.example.restaurantmanagement.dao.repository;
+package com.example.restaurantmanagement.dao.repository.jpa;
 
 import com.example.restaurantmanagement.dao.entity.OrderEntity;
 import com.example.restaurantmanagement.enums.OrderType;

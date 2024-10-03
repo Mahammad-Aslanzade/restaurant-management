@@ -1,4 +1,4 @@
-package com.example.restaurantmanagement.dao.repository;
+package com.example.restaurantmanagement.dao.repository.jpa;
 
 import com.example.restaurantmanagement.dao.entity.EmailVerificationEntity;
 import com.example.restaurantmanagement.enums.VerificationStatus;

@@ -1,4 +1,6 @@
-package com.example.restaurantmanagement.dao.repository;
+package com.example.restaurantmanagement.dao.repository.jpa;
+
+
 
 import com.example.restaurantmanagement.dao.entity.MealCategoryEntity;
 import com.example.restaurantmanagement.dao.entity.MealEntity;
@@ -9,5 +11,6 @@ import java.util.List;
 public interface MealRepository extends JpaRepository<MealEntity, String> {
 
     List<MealEntity> findAllByCategory(MealCategoryEntity mealCategoryEntity);
+
 
 }

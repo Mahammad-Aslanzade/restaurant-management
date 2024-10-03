@@ -1,7 +1,7 @@
 package com.example.restaurantmanagement.controller;
 
 import com.example.restaurantmanagement.dao.entity.UserEntity;
-import com.example.restaurantmanagement.dao.repository.UserRepository;
+import com.example.restaurantmanagement.dao.repository.jpa.UserRepository;
 
 import com.example.restaurantmanagement.model.auth.LoginRequest;
 import com.example.restaurantmanagement.model.auth.TokenResponse;

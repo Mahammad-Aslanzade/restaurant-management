@@ -3,7 +3,7 @@ package com.example.restaurantmanagement.service;
 import com.example.restaurantmanagement.dao.entity.AddressEntity;
 import com.example.restaurantmanagement.dao.entity.OrderEntity;
 import com.example.restaurantmanagement.dao.entity.UserEntity;
-import com.example.restaurantmanagement.dao.repository.OrderRepository;
+import com.example.restaurantmanagement.dao.repository.jpa.OrderRepository;
 import com.example.restaurantmanagement.enums.ExceptionDetails;
 import com.example.restaurantmanagement.enums.OrderStatus;
 import com.example.restaurantmanagement.enums.OrderType;

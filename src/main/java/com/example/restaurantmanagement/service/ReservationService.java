@@ -3,7 +3,7 @@ package com.example.restaurantmanagement.service;
 import com.example.restaurantmanagement.dao.entity.ReservationEntity;
 import com.example.restaurantmanagement.dao.entity.TableEntity;
 import com.example.restaurantmanagement.dao.entity.UserEntity;
-import com.example.restaurantmanagement.dao.repository.ReservationRepository;
+import com.example.restaurantmanagement.dao.repository.jpa.ReservationRepository;
 import com.example.restaurantmanagement.enums.ExceptionDetails;
 import com.example.restaurantmanagement.exceptions.InvalidException;
 import com.example.restaurantmanagement.exceptions.NotFoundException;
