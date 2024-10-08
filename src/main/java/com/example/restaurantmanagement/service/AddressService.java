@@ -114,7 +114,13 @@ public class AddressService {
 
         UserEntity user;
         if (client.getRole() == Role.ADMIN) {
-            user = userService.getUserEntity(addressReqDto.getUserId());
+            // if field blank set old
+            if(addressReqDto.getUserId() == null){
+                user = oldAddress.getUser();
+            }else {
+                user = userService.getUserEntity(addressReqDto.getUserId());
+            }
+
         } else {
             user = client;
         }
@@ -129,6 +135,8 @@ public class AddressService {
     public void deleteAddress(String addressId){
         log.info("ACTION.deleteAddress.start addressId: {}", addressId);
         AddressEntity address = getAddressEntity(addressId);
+        // deattach from user
+//        address.setUser(null);
         addressRepository.delete(address);
         log.info("ACTION.deleteAddress.end addressId: {}", addressId);
     }

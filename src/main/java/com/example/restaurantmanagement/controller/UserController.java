@@ -1,6 +1,9 @@
 package com.example.restaurantmanagement.controller;
 
 import com.example.restaurantmanagement.enums.Role;
+import com.example.restaurantmanagement.model.auth.ResetPassReqDto;
+import com.example.restaurantmanagement.model.auth.ResponseMessage;
+import com.example.restaurantmanagement.model.auth.UserEmailDto;
 import com.example.restaurantmanagement.model.user.UserCreateDto;
 import com.example.restaurantmanagement.model.user.UserDto;
 import com.example.restaurantmanagement.model.user.UserUpdateDto;
@@ -33,6 +36,11 @@ public class UserController {
         return userService.getUserById(userId);
     }
 
+    @GetMapping("/customer")
+    public List<UserDto> getCustomers() {
+        return userService.getCustomers();
+    }
+
     @PostMapping("/verifyEmail")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public String verifyEmail(@RequestParam String email) {
@@ -48,6 +56,16 @@ public class UserController {
     @PostMapping("/register/admin")
     public UserDto createAmin(@RequestBody @Valid UserCreateDto userCreateDto) {
         return userService.createUser(userCreateDto , Role.ADMIN);
+    }
+
+    @PostMapping("/resetPassword/getToken")
+    public ResponseMessage getResetPasswordToken(@RequestBody UserEmailDto reqDto) {
+        return userService.getResetPasswordToken(reqDto);
+    }
+
+    @PostMapping("/resetPassword")
+    public ResponseMessage resetPassoword(@RequestBody ResetPassReqDto resetPassReqDto){
+        return userService.resetPassword(resetPassReqDto);
     }
 
     @PutMapping("/{userId}")

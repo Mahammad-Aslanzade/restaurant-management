@@ -82,6 +82,15 @@ public class ReservationService {
         return !(leavingTimeOne.isBefore(arrivalTwo) || arrivalOne.isAfter(leavingTimeTwo));
     }
 
+    public void tableCapacityCheck(TableEntity table , int peopleCount){
+        if(table.getCapacity() < peopleCount){
+            throw new InvalidException(
+                    "people Count" , "Capacity less than people count",
+                    String.format("ACTION.ERROR.tableCapacityCheck peopleCount : %s | table : %s" , peopleCount , table)
+            );
+        }
+    }
+
     public void createReservation(ReservationCUDto reservationCUDto) {
         log.info("ACTION.reserveTable.start requestBody : {}", reservationCUDto);
         if (reservationCUDto.getLeavingTime().isBefore(reservationCUDto.getArrivalTime())) {
@@ -92,8 +101,11 @@ public class ReservationService {
             );
         }
 
+
         UserEntity user = myUserDetailService.getCurrentAuthenticatedUser();
         TableEntity table = tableService.getTableEntity(reservationCUDto.getTableId());
+        // Capacity Check
+        tableCapacityCheck(table , reservationCUDto.getPeopleCount());
         LocalDateTime arrival = reservationCUDto.getArrivalTime();
         LocalDateTime leaving = reservationCUDto.getLeavingTime();
         LocalDate date = LocalDate.of(arrival.getYear(), arrival.getMonthValue(), arrival.getDayOfMonth());
@@ -148,6 +160,8 @@ public class ReservationService {
         ReservationEntity updatedReservation = reservationMapper.mapToEntity(reservationCUDto);
         UserEntity user = userService.getUserEntity(reservationCUDto.getUserId());
         TableEntity table = tableService.getTableEntity(reservationCUDto.getTableId());
+        // Capacity Check
+        tableCapacityCheck(table , reservationCUDto.getPeopleCount());
         updatedReservation.setId(oldReservation.getId());
         updatedReservation.setUser(user);
         updatedReservation.setTable(table);

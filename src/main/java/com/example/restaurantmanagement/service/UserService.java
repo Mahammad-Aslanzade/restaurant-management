@@ -6,15 +6,23 @@ import com.example.restaurantmanagement.dao.repository.jpa.UserRepository;
 import com.example.restaurantmanagement.enums.ExceptionDetails;
 import com.example.restaurantmanagement.enums.Role;
 import com.example.restaurantmanagement.exceptions.AlreadyExistException;
+import com.example.restaurantmanagement.exceptions.InvalidException;
 import com.example.restaurantmanagement.exceptions.NotFoundException;
 import com.example.restaurantmanagement.mapper.UserMapper;
+import com.example.restaurantmanagement.model.auth.ResetPassReqDto;
+import com.example.restaurantmanagement.model.auth.ResetPasswordTokenDto;
+import com.example.restaurantmanagement.model.auth.ResponseMessage;
+import com.example.restaurantmanagement.model.auth.UserEmailDto;
 import com.example.restaurantmanagement.model.user.UserCreateDto;
 import com.example.restaurantmanagement.model.user.UserDto;
 import com.example.restaurantmanagement.model.user.UserUpdateDto;
+import com.example.restaurantmanagement.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.thymeleaf.context.Context;
 
 import java.util.List;
 import java.util.UUID;
@@ -28,6 +36,9 @@ public class UserService {
     private final UserRepository userRepository;
     private final EmailVerificationService emailVerificationService;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
+    private final JwtTokenUtil jwtTokenUtil;
+    private final MyUserDetailService userDetailService;
 
 
     public List<UserDto> getAllUsers() {
@@ -35,6 +46,14 @@ public class UserService {
         List<UserEntity> userEntityList = userRepository.findAll();
         List<UserDto> userDtoList = userMapper.listToDto(userEntityList);
         log.info("ACTION.getAllUsers.end");
+        return userDtoList;
+    }
+
+    public List<UserDto> getCustomers() {
+        log.info("ACTION.getCustomers.start");
+        List<UserEntity> userEntityList = userRepository.findAllByRole(Role.USER);
+        List<UserDto> userDtoList = userMapper.listToDto(userEntityList);
+        log.info("ACTION.getCustomers.end");
         return userDtoList;
     }
 
@@ -107,6 +126,8 @@ public class UserService {
         updatedUser.setId(oldUser.getId());
         // email cann't be updated | it will be add with verification like registering soon
         updatedUser.setEmail(oldUser.getEmail());
+        updatedUser.setPassword(oldUser.getPassword());
+        updatedUser.setRole(oldUser.getRole());
         updatedUser.setAddressList(oldUser.getAddressList());
         userRepository.save(updatedUser);
         log.info("ACTION.updateUser.end id : {} | reqBody : {}", userId, userUpdateDto);
@@ -143,6 +164,51 @@ public class UserService {
         user.setPassword(password);
         userRepository.save(user);
         return userMapper.mapToDto(user);
+    }
+
+    public ResponseMessage getResetPasswordToken(UserEmailDto reqDto) {
+        String email = reqDto.getEmail();
+
+        log.info("ACTION.getResetPasswordToken.start email : {}", email);
+
+        // Check user exist?
+        UserEntity user = getUserEntityByEmail(email);
+
+        //Genereate token
+        UserDetails userDetails = userDetailService.loadUserByUsername(email);
+        String token = jwtTokenUtil.generateToken(userDetails);
+
+        // Email action
+        String templateName = "reset-password";
+        String redirectUrl =  String.format("http://localhost:5173/user/resetPassword/login/%s" , token);
+        Context context = new Context();
+        context.setVariable("resetUrl", redirectUrl);
+        context.setVariable("userName" , user.getName());
+        emailService.sendEmailWithHtmlTemplate(
+                user.getEmail(), "Reset password" ,
+                templateName , context
+        );
+
+        log.info("ACTION.getResetPasswordToken.start email : {}", email);
+        return new ResponseMessage("Operation completed successfully !");
+    }
+
+    public ResponseMessage resetPassword(ResetPassReqDto resetPassReqDto){
+        UserEntity client = userDetailService.getCurrentAuthenticatedUser();
+        log.info("ACTION.resetPassword.start email : {}", client.getEmail());
+
+        if( !resetPassReqDto.getPassword().equals(resetPassReqDto.getConfirmPassword())){
+            throw new InvalidException(
+                    "confirmPassword" , "passwords don't match",
+                    String.format("ACTION.ERROR.resetPassword  email : %s | message : password don't match" , client.getEmail())
+            );
+        }
+
+        client.setPassword(passwordEncoder.encode(resetPassReqDto.getPassword()));
+        userRepository.save(client);
+
+        log.info("ACTION.resetPassword.end email : {}", client.getEmail());
+        return new ResponseMessage("Operation completed successfully !");
     }
 
 }

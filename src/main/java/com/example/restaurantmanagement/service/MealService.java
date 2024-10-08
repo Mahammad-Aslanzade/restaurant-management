@@ -27,6 +27,7 @@ public class MealService {
     private final MealCategoryService mealCategoryService;
     private final MealElasticSearchRepository mealElasticSearchRepository;
 
+
     public List<MealDto> getAllMeals() {
         log.info("ACTION.getAllMeals.start");
         List<MealEntity> mealEntities = mealRepository.findAll();

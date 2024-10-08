@@ -47,7 +47,8 @@ public class SecurityConfig {
                 .cors().and()
 
                 .authorizeHttpRequests((requests) -> requests
-                                .requestMatchers("/user").hasAuthority(Role.ADMIN.name())
+                                .requestMatchers("/user/resetPassword/getToken").permitAll()
+                                .requestMatchers("/user/**").hasAuthority(Role.ADMIN.name())
                                 .requestMatchers("/uploads/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/aboutUs").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/meal/**").permitAll()
