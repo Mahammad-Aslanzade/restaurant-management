@@ -10,6 +10,7 @@ import com.example.restaurantmanagement.exceptions.NotFoundException;
 import com.example.restaurantmanagement.mapper.ReservationMapper;
 import com.example.restaurantmanagement.model.reservation.ReservationCUDto;
 import com.example.restaurantmanagement.model.reservation.ReservationDto;
+import com.example.restaurantmanagement.model.reservation.ReservationWithoutUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -65,6 +66,15 @@ public class ReservationService {
         List<ReservationEntity> reservationEntities = reservationRepository.findByUser(user);
         List<ReservationDto> reservationDtos = reservationMapper.listToDto(reservationEntities);
         log.info("ACTION.getUserReservations.end userId : {}", userId);
+        return reservationDtos;
+    }
+
+    public List<ReservationWithoutUser> getCurrentReservations() {
+        UserEntity user = myUserDetailService.getCurrentAuthenticatedUser();
+        log.info("ACTION.getUserReservations.getCurrentReservations userId : {}", user.getId());
+        List<ReservationEntity> reservationEntities = reservationRepository.findByUser(user);
+        List<ReservationWithoutUser> reservationDtos = reservationMapper.listToDtoForUser(reservationEntities);
+        log.info("ACTION.getUserReservations.end userId : {}", user.getId());
         return reservationDtos;
     }
 
@@ -175,4 +185,5 @@ public class ReservationService {
         reservationRepository.delete(reservation);
         log.info("ACTION.deleteReservation.end reservationId : {}", reservationId);
     }
+
 }

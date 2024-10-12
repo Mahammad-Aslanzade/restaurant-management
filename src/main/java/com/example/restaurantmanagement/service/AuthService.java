@@ -2,7 +2,6 @@ package com.example.restaurantmanagement.service;
 
 import com.example.restaurantmanagement.dao.entity.UserEntity;
 import com.example.restaurantmanagement.exceptions.NotAllowedException;
-import com.example.restaurantmanagement.mapper.UserMapper;
 import com.example.restaurantmanagement.model.auth.LoginRequest;
 import com.example.restaurantmanagement.model.auth.ResponseMessage;
 import com.example.restaurantmanagement.model.auth.TokenResponse;
@@ -29,7 +28,6 @@ public class AuthService {
 
     private final MyUserDetailService userDetailsService;
     private final UserService userService;
-    private final UserMapper userMapper;
 
 
     public TokenResponse login(@RequestBody LoginRequest authenticationRequest , HttpServletResponse response) {

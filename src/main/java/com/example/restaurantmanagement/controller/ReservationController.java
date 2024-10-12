@@ -2,6 +2,7 @@ package com.example.restaurantmanagement.controller;
 
 import com.example.restaurantmanagement.model.reservation.ReservationCUDto;
 import com.example.restaurantmanagement.model.reservation.ReservationDto;
+import com.example.restaurantmanagement.model.reservation.ReservationWithoutUser;
 import com.example.restaurantmanagement.service.ReservationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,11 @@ public class ReservationController {
     @GetMapping("/{reservationId}")
     public ReservationDto getReservationById(@PathVariable String reservationId) {
         return reservationService.getReservationById(reservationId);
+    }
+
+    @GetMapping("/user")
+    public List<ReservationWithoutUser> getCurrentReservations(){
+        return reservationService.getCurrentReservations();
     }
 
     @GetMapping("/user/{userId}")

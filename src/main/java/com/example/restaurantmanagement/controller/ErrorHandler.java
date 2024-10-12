@@ -32,6 +32,14 @@ public class ErrorHandler {
         return errorList;
     }
 
+    @ExceptionHandler(TooManyRequestException.class)
+    @ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
+    public TooManyRequestExceptionDto handleTooManyRequest(TooManyRequestException exception) {
+        log.error(exception.getLogMessage());
+        System.out.println("Salam---");
+        return new TooManyRequestExceptionDto(exception.getMessage());
+    }
+
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public NotFoundDto handleNotFound(NotFoundException exception) {
