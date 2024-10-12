@@ -1,10 +1,7 @@
 package com.example.restaurantmanagement.controller;
 
 import com.example.restaurantmanagement.exceptions.*;
-import com.example.restaurantmanagement.model.exception.AlreadyExistDto;
-import com.example.restaurantmanagement.model.exception.InvalidExceptionDto;
-import com.example.restaurantmanagement.model.exception.IsNotValidRegDto;
-import com.example.restaurantmanagement.model.exception.NotFoundDto;
+import com.example.restaurantmanagement.model.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -88,13 +85,16 @@ public class ErrorHandler {
 
     @ExceptionHandler(RelationExistException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public HashMap<String, String> handleRelationExistException(RelationExistException exception){
+    public ExceptionMessageDto handleRelationExistException(RelationExistException exception){
         log.error(exception.getLogMessage());
-        HashMap<String, String> response = new HashMap<>();
-        response.put("message" , exception.getMessage());
-        return response;
+        return new ExceptionMessageDto(exception.getMessage());
     }
 
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ExceptionMessageDto globalExceptionHandler(Exception e){
+        return new ExceptionMessageDto(e.getMessage());
+    }
 
 
 }

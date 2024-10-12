@@ -180,7 +180,7 @@ public class UserService {
 
         // Email action
         String templateName = "reset-password";
-        String redirectUrl =  String.format("http://localhost:5173/user/resetPassword/login/%s" , token);
+        String redirectUrl =  String.format("http://localhost:5173/user/resetPassword/%s" , token);
         Context context = new Context();
         context.setVariable("resetUrl", redirectUrl);
         context.setVariable("userName" , user.getName());
