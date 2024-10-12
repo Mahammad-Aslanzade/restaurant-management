@@ -8,6 +8,7 @@ import com.example.restaurantmanagement.exceptions.InvalidException;
 import com.example.restaurantmanagement.exceptions.NotAllowedException;
 import com.example.restaurantmanagement.exceptions.NotFoundException;
 import com.example.restaurantmanagement.mapper.AddressMapper;
+import com.example.restaurantmanagement.model.address.AddressDetailDto;
 import com.example.restaurantmanagement.model.address.AddressReqDto;
 import com.example.restaurantmanagement.model.address.AddressDto;
 import lombok.RequiredArgsConstructor;
@@ -51,11 +52,12 @@ public class AddressService {
         return addressDto;
     }
 
-    public List<AddressDto> getAddresesByUser(String userId) {
-        log.info("ACTION.getAddresesByUser.start userId : {}", userId);
-        List<AddressEntity> addressEntityList = addressRepository.findAllByUserId(userId);
-        List<AddressDto> addressDtoList = addressMapper.listToDto(addressEntityList);
-        log.info("ACTION.getAddresesByUser.end userId : {}", userId);
+    public List<AddressDetailDto> getAddresesByUser() {
+        UserEntity user = userDetailService.getCurrentAuthenticatedUser();
+        log.info("ACTION.getAddresesByUser.start userId : {}", user.getId());
+        List<AddressEntity> addressEntityList = addressRepository.findAllByUser(user);
+        List<AddressDetailDto> addressDtoList = addressMapper.listToDetailsDto(addressEntityList);
+        log.info("ACTION.getAddresesByUser.end userId : {}", user.getId());
         return addressDtoList;
     }
 

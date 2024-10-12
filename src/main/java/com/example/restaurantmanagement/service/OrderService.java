@@ -9,12 +9,14 @@ import com.example.restaurantmanagement.enums.OrderStatus;
 import com.example.restaurantmanagement.enums.OrderType;
 import com.example.restaurantmanagement.enums.PaymentType;
 import com.example.restaurantmanagement.exceptions.InvalidException;
+import com.example.restaurantmanagement.exceptions.NotAllowedException;
 import com.example.restaurantmanagement.exceptions.NotFoundException;
 import com.example.restaurantmanagement.mapper.OrderMapper;
 import com.example.restaurantmanagement.model.order.OrderCreateDto;
 import com.example.restaurantmanagement.model.order.OrderDto;
 import com.example.restaurantmanagement.model.order.OrderUpdateDto;
 import com.example.restaurantmanagement.model.order.UpdateStatusDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,12 +34,22 @@ public class OrderService {
 
     private final MealService mealService;
     private final UserService userService;
+    private final MyUserDetailService userDetailService;
 
     public List<OrderDto> getAllOrders() {
         log.info("ACTION.getAllOrders.start");
         List<OrderEntity> orderEntityList = orderRepository.findAll();
         List<OrderDto> orderDtoList = orderMapper.listToDto(orderEntityList);
         log.info("ACTION.getAllOrders.end");
+        return orderDtoList;
+    }
+
+    public List<OrderDto> getUserOrders() {
+        UserEntity user = userDetailService.getCurrentAuthenticatedUser();
+        log.info("ACTION.getUserOrders.start userId : {}", user.getId());
+        List<OrderEntity> orderEntityList = orderRepository.findAllByUser(user);
+        List<OrderDto> orderDtoList = orderMapper.listToDto(orderEntityList);
+        log.info("ACTION.getUserOrders.end userId : {}", user.getId());
         return orderDtoList;
     }
 
@@ -95,12 +107,21 @@ public class OrderService {
         return orderDtoList;
     }
 
+    private void checkOrderBelongTo(OrderEntity order ,UserEntity user){
+        if(order.getUser() != user){
+            throw new NotAllowedException(
+                    "This order not belong to you !",
+                    String.format("ACTION.ERROR.checkOrderBelogTo userId : %s | orderId : %s", user.getId() , order.getId())
+            );
+        }
+    }
+
     public void createOrder(OrderCreateDto orderCreateDto) {
         log.info("ACTION.createOrder.start requestBody : {}", orderCreateDto);
         OrderEntity order = orderMapper.mapToEntity(orderCreateDto);
         // User and Address
-        UserEntity user = userService.getUserEntity(orderCreateDto.getUserId());
-        AddressEntity address = userService.haveThisAddress(orderCreateDto.getUserId(), orderCreateDto.getAddressId());
+        UserEntity user = userDetailService.getCurrentAuthenticatedUser();
+        AddressEntity address = userService.haveThisAddress(user, orderCreateDto.getAddressId());
         order.setUser(user);
         order.setAddress(address);
         // Total amount
@@ -116,10 +137,12 @@ public class OrderService {
         log.info("ACTION.createOrder.end requestBody : {}", orderCreateDto);
     }
 
-    public void updateOrderStatus(String orderId, UpdateStatusDto updateStatusDto) {
+    public void updateOrderStatus(String orderId, @Valid UpdateStatusDto updateStatusDto) {
+        UserEntity user = userDetailService.getCurrentAuthenticatedUser();
         OrderStatus status = updateStatusDto.getStatus();
         log.info("ACTION.updateOrderStatus.start orderId : {} | status : {}", orderId, status);
         OrderEntity order = getOrderEntity(orderId);
+        checkOrderBelongTo(order , user);
         order.setStatus(status);
         orderRepository.save(order);
         log.info("ACTION.updateOrderStatus.end orderId : {} | status : {}", orderId, status);
@@ -131,8 +154,10 @@ public class OrderService {
         OrderEntity updatedOrder = orderMapper.mapToEntity(orderUpdateDto);
         updatedOrder.setId(oldOrder.getId());
         // User and Address
-        UserEntity user = userService.getUserEntity(orderUpdateDto.getUserId());
-        AddressEntity address = userService.haveThisAddress(orderUpdateDto.getUserId(), orderUpdateDto.getAddressId());
+        UserEntity user = userDetailService.getCurrentAuthenticatedUser();
+        // Check USER & ORDER realation
+        checkOrderBelongTo(oldOrder , user);
+        AddressEntity address = userService.haveThisAddress(user, orderUpdateDto.getAddressId());
         updatedOrder.setUser(user);
         updatedOrder.setAddress(address);
         // Total amount

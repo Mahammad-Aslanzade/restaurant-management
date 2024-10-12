@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -88,6 +89,14 @@ public class ErrorHandler {
     public ExceptionMessageDto handleRelationExistException(RelationExistException exception){
         log.error(exception.getLogMessage());
         return new ExceptionMessageDto(exception.getMessage());
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionMessageDto handleInvalidEnumException(MethodArgumentTypeMismatchException exception){
+        log.error("INCORRECT.ENUM");
+        String message = String.format("Invalid value for field '%s': '%s'. Please provide one of the valid values.", exception.getName(), exception.getValue());
+        return new ExceptionMessageDto(message);
     }
 
     @ExceptionHandler(Exception.class)

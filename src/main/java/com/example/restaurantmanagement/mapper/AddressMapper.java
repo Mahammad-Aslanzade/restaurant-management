@@ -1,6 +1,7 @@
 package com.example.restaurantmanagement.mapper;
 
 import com.example.restaurantmanagement.dao.entity.AddressEntity;
+import com.example.restaurantmanagement.model.address.AddressDetailDto;
 import com.example.restaurantmanagement.model.address.AddressReqDto;
 import com.example.restaurantmanagement.model.address.AddressDto;
 import org.mapstruct.Mapper;
@@ -11,6 +12,7 @@ import java.util.List;
 public interface AddressMapper {
 
     List<AddressDto> listToDto(List<AddressEntity> addressEntityList);
+    List<AddressDetailDto> listToDetailsDto(List<AddressEntity> addressEntityList);
 
     AddressEntity mapToEntity(AddressReqDto addressReqDto);
 

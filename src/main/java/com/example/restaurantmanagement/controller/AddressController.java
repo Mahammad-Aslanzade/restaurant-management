@@ -1,5 +1,6 @@
 package com.example.restaurantmanagement.controller;
 
+import com.example.restaurantmanagement.model.address.AddressDetailDto;
 import com.example.restaurantmanagement.model.address.AddressReqDto;
 import com.example.restaurantmanagement.model.address.AddressDto;
 import com.example.restaurantmanagement.service.AddressService;
@@ -22,14 +23,14 @@ public class AddressController {
         return addressService.getAllAddreses();
     }
 
+    @GetMapping("/currentUser")
+    public List<AddressDetailDto> getUserAddress(){
+        return addressService.getAddresesByUser();
+    }
+
     @GetMapping("/{addressId}")
     public AddressDto getAddressById(@PathVariable String addressId) {
         return addressService.getAddressById(addressId);
-    }
-
-    @GetMapping("/user/{userId}")
-    public List<AddressDto> getAddresesByUser(@PathVariable String userId){
-        return addressService.getAddresesByUser(userId);
     }
 
     @PostMapping

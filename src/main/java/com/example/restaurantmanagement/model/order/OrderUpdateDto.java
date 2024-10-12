@@ -14,7 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderUpdateDto {
-    private String userId;
     private String addressId;
     private OrderStatus status;
     private OrderType type;

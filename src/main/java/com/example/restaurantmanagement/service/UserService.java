@@ -140,10 +140,8 @@ public class UserService {
         log.info("ACTION.deleteUser.end userId : {}", userId);
     }
 
-    public AddressEntity haveThisAddress(String userId, String addressId) {
-        UserEntity user = getUserEntity(userId);
+    public AddressEntity haveThisAddress(UserEntity user, String addressId) {
         List<AddressEntity> addressList = user.getAddressList();
-
         for (AddressEntity address : addressList) {
             if (address.getId().equals(addressId)) {
                 return address;
@@ -152,7 +150,7 @@ public class UserService {
 
         throw new NotFoundException(
                 ExceptionDetails.INVALID_ADDRESS.message(),
-                String.format("ACTION.ERROR.haveThisAddress userId : %s | addressId : %s", userId, addressId)
+                String.format("ACTION.ERROR.haveThisAddress userId : %s | addressId : %s", user.getId(), addressId)
         );
     }
 
