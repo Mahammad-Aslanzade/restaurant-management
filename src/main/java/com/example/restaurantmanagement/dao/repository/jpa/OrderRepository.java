@@ -15,5 +15,6 @@ public interface OrderRepository extends JpaRepository<OrderEntity, String> {
     List<OrderEntity> findAllByPaymentType(PaymentType paymentType);
 
     List<OrderEntity> findAllByUser(UserEntity user);
+    List<OrderEntity> findAllByUserId(String userId);
 
 }

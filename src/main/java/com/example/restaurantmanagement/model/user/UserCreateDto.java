@@ -1,6 +1,7 @@
 package com.example.restaurantmanagement.model.user;
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -24,5 +25,6 @@ public class UserCreateDto {
     @Pattern(regexp = "\\+994\\d{9}", message = "Phone number must be in the format +994xxxxxxxxx")
     private String phoneNumber;
     private String password;
+    @Past
     private LocalDate birthDate;
 }

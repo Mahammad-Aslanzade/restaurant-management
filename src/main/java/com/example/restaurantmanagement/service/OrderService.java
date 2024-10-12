@@ -44,12 +44,20 @@ public class OrderService {
         return orderDtoList;
     }
 
-    public List<OrderDto> getUserOrders() {
+    public List<OrderDto> getCurrentUserOrders() {
         UserEntity user = userDetailService.getCurrentAuthenticatedUser();
-        log.info("ACTION.getUserOrders.start userId : {}", user.getId());
+        log.info("ACTION.getCurrentUserOrders.start userId : {}", user.getId());
         List<OrderEntity> orderEntityList = orderRepository.findAllByUser(user);
         List<OrderDto> orderDtoList = orderMapper.listToDto(orderEntityList);
-        log.info("ACTION.getUserOrders.end userId : {}", user.getId());
+        log.info("ACTION.getCurrentUserOrders.end userId : {}", user.getId());
+        return orderDtoList;
+    }
+
+    public List<OrderDto> getUserOrders(String userId) {
+        log.info("ACTION.getUserOrders.start userId : {}", userId);
+        List<OrderEntity> orderEntityList = orderRepository.findAllByUserId(userId);
+        List<OrderDto> orderDtoList = orderMapper.listToDto(orderEntityList);
+        log.info("ACTION.getUserOrders.end userId : {}", userId);
         return orderDtoList;
     }
 
@@ -167,5 +175,4 @@ public class OrderService {
         orderRepository.save(updatedOrder);
         log.info("ACTION.updateOrder.end orderId : {} | requestDto : {}", orderId, orderUpdateDto);
     }
-
 }

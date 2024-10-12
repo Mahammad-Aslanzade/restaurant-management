@@ -47,15 +47,14 @@ public class UserController {
         return emailVerificationService.verifyEmail(email);
     }
 
-    @PostMapping("/register/ordinary")
+    @PostMapping("/register")
     public UserDto createNormalUser(@RequestBody @Valid UserCreateDto userCreateDto) {
-        System.out.println("salam--");
         return userService.createUser(userCreateDto , Role.USER);
     }
 
-    @PostMapping("/register/admin")
+    @PostMapping("/register/moderator")
     public UserDto createAmin(@RequestBody @Valid UserCreateDto userCreateDto) {
-        return userService.createUser(userCreateDto , Role.ADMIN);
+        return userService.createUser(userCreateDto , Role.MODERATOR);
     }
 
     @PostMapping("/resetPassword/getToken")

@@ -23,9 +23,14 @@ public class OrderController {
         return orderService.getAllOrders();
     }
 
-    @GetMapping("/currentUser")
-    public List<OrderDto> getUserOrders(){
-        return orderService.getUserOrders();
+    @GetMapping("/user")
+    public List<OrderDto> getCurrentUserOrders(){
+        return orderService.getCurrentUserOrders();
+    }
+
+    @GetMapping("/user/{userId}")
+    public List<OrderDto> getUserOrders(@PathVariable String userId){
+        return orderService.getUserOrders(userId);
     }
 
     @GetMapping("/{orderId}")

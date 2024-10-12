@@ -5,12 +5,13 @@ import com.example.restaurantmanagement.dao.entity.UserEntity;
 import com.example.restaurantmanagement.dao.repository.jpa.UserRepository;
 import com.example.restaurantmanagement.enums.ExceptionDetails;
 import com.example.restaurantmanagement.enums.Role;
+import com.example.restaurantmanagement.enums.VerificationStatus;
 import com.example.restaurantmanagement.exceptions.AlreadyExistException;
 import com.example.restaurantmanagement.exceptions.InvalidException;
+import com.example.restaurantmanagement.exceptions.IsNotValidForRegister;
 import com.example.restaurantmanagement.exceptions.NotFoundException;
 import com.example.restaurantmanagement.mapper.UserMapper;
 import com.example.restaurantmanagement.model.auth.ResetPassReqDto;
-import com.example.restaurantmanagement.model.auth.ResetPasswordTokenDto;
 import com.example.restaurantmanagement.model.auth.ResponseMessage;
 import com.example.restaurantmanagement.model.auth.UserEmailDto;
 import com.example.restaurantmanagement.model.user.UserCreateDto;
@@ -94,26 +95,26 @@ public class UserService {
                     ExceptionDetails.THIS_EMAIL_IS_ALREADY_EXIST.createLogMessage("createUser", "email", userCreateDto.getEmail())
             );
         }
-//
-//    // Check code is valid
-//    Boolean isValidForReg = emailVerificationService.checkValidCode(
-//            userCreateDto.getEmail(),
-//            userCreateDto.getVerificationCode()
-//    );
-//    if (!isValidForReg) {
-//        throw new IsNotValidForRegister(
-//                userCreateDto.getVerificationCode(),
-//                userCreateDto.getEmail(),
-//                "This verification code is not valid",
-//                String.format("ACTION.ERROR.createUser requestBody : %s", userCreateDto)
-//        );
-//    }
+
+    // Check code is valid
+    Boolean isValidForReg = emailVerificationService.checkValidCode(
+            userCreateDto.getEmail(),
+            userCreateDto.getVerificationCode()
+    );
+    if (!isValidForReg) {
+        throw new IsNotValidForRegister(
+                userCreateDto.getVerificationCode(),
+                userCreateDto.getEmail(),
+                "This verification code is not valid",
+                String.format("ACTION.ERROR.createUser requestBody : %s", userCreateDto)
+        );
+    }
 
         UserEntity userEntity = userMapper.mapToEntity(userCreateDto);
         userEntity.setRole(role);
         userEntity.setPassword(passwordEncoder.encode(userCreateDto.getPassword()));
         userRepository.save(userEntity);
-//    emailVerificationService.changeStatus(userCreateDto.getEmail(), VerificationStatus.VERIFICATED);
+        emailVerificationService.changeStatus(userCreateDto.getEmail(), VerificationStatus.VERIFICATED);
         log.info("ACTION.createUser.end requestBody : {}", userCreateDto);
         return userMapper.mapToDto(userEntity);
     }

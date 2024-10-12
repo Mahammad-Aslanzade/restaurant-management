@@ -29,6 +29,11 @@ public class FeedbackController {
         return feedbackService.getFeedbackById(feedBackId);
     }
 
+    @GetMapping("/user")
+    public List<FeedbackDto> getCurrentUserFeedbacks(){
+        return feedbackService.getCurrentUserFeedbacks();
+    }
+
     @GetMapping("/user/{userId}")
     public List<FeedbackDto> getFeedbackByUser(@PathVariable String userId){
         return feedbackService.getFeedbackByUser(userId);

@@ -44,7 +44,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors().and()
+                .cors(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)
 
                 .authorizeHttpRequests((requests) -> requests
                                 .requestMatchers("/user/resetPassword/getToken").permitAll()
@@ -70,7 +71,10 @@ public class SecurityConfig {
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
 //                .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                 .csrf(AbstractHttpConfigurer::disable)
-                .logout(LogoutConfigurer::permitAll);
+                .logout((logout)->{
+                    logout.logoutUrl("/logout");
+                    logout.permitAll();
+                });
 //        http.userDetailsService(userDetailsService);
         return http.build();
     }

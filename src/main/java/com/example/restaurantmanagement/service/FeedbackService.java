@@ -64,6 +64,15 @@ public class FeedbackService {
         return feedbackDtoList;
     }
 
+    public List<FeedbackDto> getCurrentUserFeedbacks() {
+        UserEntity user = myUserDetailService.getCurrentAuthenticatedUser();
+        log.info("ACTION.getCurrentUserFeedbacks.start");
+        List<FeedbackEntity> feedbackEntityList = feedbackRepository.findAllByUser(user);
+        List<FeedbackDto> feedbackDtoList = feedbackMapper.listToDto(feedbackEntityList);
+        log.info("ACTION.getCurrentUserFeedbacks.end");
+        return feedbackDtoList;
+    }
+
     public void postFeedback(FeedbackCDto feedBackCDto) {
         log.info("ACTION.postFeedback.start requestBody : {}", feedBackCDto);
         FeedbackEntity feedbackEntity = feedbackMapper.mapToEntity(feedBackCDto);

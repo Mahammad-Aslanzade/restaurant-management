@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -54,6 +55,13 @@ public class ErrorHandler {
                 exception.getUserEmail(),
                 exception.getMessage()
         );
+    }
+
+    @ExceptionHandler(MissingServletRequestPartException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionMessageDto handleMissingRequestPart(MissingServletRequestPartException exception){
+        log.error(exception.getMessage());
+        return new ExceptionMessageDto(exception.getMessage());
     }
 
     @ExceptionHandler(InvalidException.class)
@@ -102,6 +110,7 @@ public class ErrorHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ExceptionMessageDto globalExceptionHandler(Exception e){
+        log.error(e.getMessage());
         return new ExceptionMessageDto(e.getMessage());
     }
 
