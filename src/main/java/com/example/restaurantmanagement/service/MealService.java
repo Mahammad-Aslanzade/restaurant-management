@@ -2,7 +2,6 @@ package com.example.restaurantmanagement.service;
 
 import com.example.restaurantmanagement.dao.entity.MealCategoryEntity;
 import com.example.restaurantmanagement.dao.entity.MealEntity;
-import com.example.restaurantmanagement.dao.repository.elastic.MealElasticSearchRepository;
 import com.example.restaurantmanagement.dao.repository.jpa.MealRepository;
 import com.example.restaurantmanagement.enums.ExceptionDetails;
 import com.example.restaurantmanagement.exceptions.NotFoundException;
@@ -25,7 +24,6 @@ public class MealService {
     private final MealRepository mealRepository;
     private final ImageService imageService;
     private final MealCategoryService mealCategoryService;
-    private final MealElasticSearchRepository mealElasticSearchRepository;
 
 
     public List<MealDto> getAllMeals() {
@@ -53,14 +51,6 @@ public class MealService {
         return mealDto;
     }
 
-    public List<MealDto> elasticSearchMeal(String title){
-        log.info("ACTION.elasticSearchMeal.start title : {}", title);
-        List<MealEntity> allMealEntites = mealElasticSearchRepository.searchAllByTitle(title);
-        List<MealDto> allMealDtos = mealMapper.listToDto(allMealEntites);
-        log.info("ACTION.elasticSearchMeal.start end : {}", title);
-        return allMealDtos;
-    }
-
 
     public void createMeal(MultipartFile image, MealReqDto mealReqDto) {
         log.info("ACTION.createMeal.start requestBody : {}", mealReqDto);
@@ -85,6 +75,7 @@ public class MealService {
 
         MealCategoryEntity mealCategory = mealCategoryService.getCategoryEntity(mealReqDto.getCategoryId());
         updatedMeal.setCategory(mealCategory);
+        updatedMeal.setFeedbackEntities(oldMeal.getFeedbackEntities());
 
         if (image == null) {
             updatedMeal.setImage(oldMeal.getImage());
@@ -116,19 +107,4 @@ public class MealService {
         return totalAmount;
     }
 
-
-    public MealDto elasticAddMeal(MultipartFile image, MealReqDto mealReqDto) {
-        log.info("ACTION.elasticAddMeal.start requestBody : {}", mealReqDto);
-        MealEntity mealEntity = mealMapper.mapToEntity(mealReqDto);
-
-        String imageUrl = imageService.upLoadImageAndGetUrl(image);
-        mealEntity.setImage(imageUrl);
-
-        MealCategoryEntity category = mealCategoryService.getCategoryEntity(mealReqDto.getCategoryId());
-        mealEntity.setCategory(category);
-        mealElasticSearchRepository.save(mealEntity);
-        mealRepository.save(mealEntity);
-        log.info("ACTION.elasticAddMeal.end requestBody : {}", mealReqDto);
-        return mealMapper.mapToDto(mealEntity);
-    }
 }

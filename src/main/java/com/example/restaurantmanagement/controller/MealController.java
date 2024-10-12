@@ -31,16 +31,6 @@ public class MealController {
         return mealService.getMealById(mealId);
     }
 
-    @GetMapping("/search/{title}")
-    public List<MealDto> searchByTitle(@PathVariable String title) {
-        return mealService.elasticSearchMeal(title);
-    }
-
-    @PostMapping("/elastic")
-    public MealDto elasticAddMeal(@RequestPart("image") MultipartFile image, @RequestBody @Valid MealReqDto mealReqDto) {
-        return mealService.elasticAddMeal(image, mealReqDto);
-    }
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void createMeal(@RequestPart("image") MultipartFile image, @RequestPart("mealDetails") @Valid MealReqDto mealReqDto) {

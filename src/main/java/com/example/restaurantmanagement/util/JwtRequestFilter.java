@@ -28,7 +28,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final JwtTokenUtil jwtTokenUtil;
     private final HashMap<String, AtomicInteger> requestCountsPerIpAddress = new HashMap<>();
-    private final int REQUEST_LIMIT = 5;
+    private final int REQUEST_LIMIT = 100;
 
 
     @Override

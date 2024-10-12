@@ -4,10 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.web.multipart.MultipartFile;
+
 
 import java.io.IOException;
 import java.util.List;
@@ -19,7 +17,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "meals")
-@Document(indexName = "meals")
 public class MealEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -36,7 +33,7 @@ public class MealEntity {
     private Double price;
     private Double salePrice;
     private Double rate;
-    @OneToMany(mappedBy = "meal" , cascade = CascadeType.ALL , orphanRemoval = true)
+    @OneToMany(mappedBy = "meal" , orphanRemoval = true)
     private List<FeedbackEntity> feedbackEntities;
     @OneToOne
     @JoinColumn(name = "category")

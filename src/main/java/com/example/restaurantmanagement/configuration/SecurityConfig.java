@@ -32,23 +32,27 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
-        configuration.addAllowedOrigin("http://localhost:5173"); // Allow your frontend origin
-        configuration.addAllowedMethod("*"); // Allow all methods (GET, POST, etc.)
-        configuration.addAllowedHeader("*"); // Allow all headers
+        configuration.addAllowedOrigin("http://localhost:5173");
+        configuration.addAllowedMethod("*");
+        configuration.addAllowedHeader("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); // Apply CORS configuration to all endpoints
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(AbstractHttpConfigurer::disable)
+                .cors()
+                .and()
                 .csrf(AbstractHttpConfigurer::disable)
 
                 .authorizeHttpRequests((request) -> request
                         // ----------------------------AUTHENTICATION------------------------------
                         .requestMatchers("/auth/**").permitAll()
+
+                        // ----------------------------UPLOADS------------------------------
+                        .requestMatchers("/uploads/**").permitAll()
 
                         // ----------------------------USER------------------------------
                         // Permit All
@@ -130,7 +134,6 @@ public class SecurityConfig {
                     logout.permitAll();
                 });
 
-//        http.userDetailsService(userDetailsService);
         return http.build();
     }
 

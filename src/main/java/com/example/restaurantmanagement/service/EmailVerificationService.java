@@ -7,6 +7,7 @@ import com.example.restaurantmanagement.enums.ExceptionDetails;
 import com.example.restaurantmanagement.enums.VerificationStatus;
 import com.example.restaurantmanagement.exceptions.AlreadyExistException;
 import com.example.restaurantmanagement.exceptions.NotFoundException;
+import com.example.restaurantmanagement.model.auth.ResponseMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class EmailVerificationService {
 
     private static final Random random = new Random();
 
-    public String verifyEmail(String email) {
+    public ResponseMessage verifyEmail(String email) {
         log.info("ACTION.verifyEmail.start email : {}", email);
         //Does user exist with this email (checking process)
         if (userRepository.findByEmail(email).isPresent()) {
@@ -70,7 +71,7 @@ public class EmailVerificationService {
 
         emailVerificationRepository.save(verificatedEntity);
         log.info("ACTION.verifyEmail.end email : {}", email);
-        return generatedCode;
+        return new ResponseMessage("Successfull operation !");
     }
 
     public Boolean checkValidCode(String email, String code) {

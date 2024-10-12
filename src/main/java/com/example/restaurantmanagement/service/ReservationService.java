@@ -166,6 +166,13 @@ public class ReservationService {
 
     public void updateReservation(String reservationId, ReservationCUDto reservationCUDto) {
         log.info("ACTION.updateReservation.start requestBody : {}", reservationCUDto);
+        if (reservationCUDto.getLeavingTime().isBefore(reservationCUDto.getArrivalTime())) {
+            throw new InvalidException(
+                    "LEAVING_TIME",
+                    "LEVAING_TIME_IS_BEFORE_THAN_ARRIVAL",
+                    String.format("ACTION.ERROR.createReservation arrivalTime : %s | leavingTime : %s", reservationCUDto.getArrivalTime(), reservationCUDto.getLeavingTime())
+            );
+        }
         ReservationEntity oldReservation = getReservationEntity(reservationId);
         ReservationEntity updatedReservation = reservationMapper.mapToEntity(reservationCUDto);
         UserEntity user = userService.getUserEntity(reservationCUDto.getUserId());

@@ -16,7 +16,7 @@ services:
 
   restaurant-application:
     container_name: "restaurant-backend"
-    image: restaurant-app
+#    image: restaurant-app
     ports:
       - "8080:8080"
     networks:

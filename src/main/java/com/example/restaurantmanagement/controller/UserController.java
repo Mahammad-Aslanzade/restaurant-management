@@ -43,7 +43,7 @@ public class UserController {
 
     @PostMapping("/verifyEmail")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public String verifyEmail(@RequestParam String email) {
+    public ResponseMessage verifyEmail(@RequestParam String email) {
         return emailVerificationService.verifyEmail(email);
     }
 
