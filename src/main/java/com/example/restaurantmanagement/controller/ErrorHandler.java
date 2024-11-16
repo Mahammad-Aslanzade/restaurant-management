@@ -119,7 +119,7 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ExceptionMessageDto globalExceptionHandler(Exception e){
         log.error(e.getMessage());
-        return new ExceptionMessageDto(e.getMessage());
+        return new ExceptionMessageDto("INTERNAL_SERVER_ERROR");
     }
 
 

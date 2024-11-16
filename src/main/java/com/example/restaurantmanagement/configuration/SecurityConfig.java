@@ -48,6 +48,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
 
                 .authorizeHttpRequests((request) -> request
+                        // ----------------------------SWAGGER------------------------------
+                        .requestMatchers(SWAGGER_WHITELIST).permitAll()
                         // ----------------------------AUTHENTICATION------------------------------
                         .requestMatchers("/auth/**").permitAll()
 
@@ -147,4 +149,10 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    private static final String[] SWAGGER_WHITELIST = {
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/api/authenticate"
+    };
 }

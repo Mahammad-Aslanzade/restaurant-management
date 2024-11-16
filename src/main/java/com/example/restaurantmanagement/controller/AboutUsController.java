@@ -2,6 +2,7 @@ package com.example.restaurantmanagement.controller;
 
 import com.example.restaurantmanagement.model.aboutUs.AboutUsDto;
 import com.example.restaurantmanagement.service.AboutUsService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ public class AboutUsController {
 
     private final AboutUsService aboutUsService;
 
+    @Operation(method = "Dsafa")
     @GetMapping
     public AboutUsDto getAboutUs() {
         return aboutUsService.getAboutUs();

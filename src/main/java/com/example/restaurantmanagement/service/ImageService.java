@@ -9,7 +9,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,10 +22,21 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class ImageService {
     private final String FOLDER_PATH = System.getProperty("user.dir") + "/uploads/";
-    private final String SERVER_URL = "http://localhost:8080/api/uploads/";
+    private final String SERVER_URL = String.format("http://%s:8080/api/uploads/" , defineIpAddress());
+
+    public static String defineIpAddress(){
+        InetAddress localHost = null;
+        try {
+            localHost = InetAddress.getLocalHost();
+        } catch (UnknownHostException e) {
+            return "localhost";
+        }
+        return localHost.getHostAddress();
+    }
+
 
     public Resource getImage(String fileName) {
-        Path path = Paths.get(String.format("C:/Users/Mahammad/Desktop/Java-Project/restaurant-management/uploads/%s", fileName));
+        Path path = Paths.get(String.format("%s/%s",FOLDER_PATH , fileName));
         try {
             Resource resource = new UrlResource(path.toUri());
             if (resource.exists()) return resource;
