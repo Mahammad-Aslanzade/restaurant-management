@@ -1,5 +1,6 @@
 package com.example.restaurantmanagement.service;
 
+import com.example.restaurantmanagement.configuration.MinioBuckets;
 import com.example.restaurantmanagement.dao.entity.MealCategoryEntity;
 import com.example.restaurantmanagement.dao.entity.MealEntity;
 import com.example.restaurantmanagement.dao.repository.jpa.MealRepository;
@@ -57,7 +58,7 @@ public class MealService {
         mealReqDto.getIngredientsList().forEach(System.out::println);
         MealEntity mealEntity = mealMapper.mapToEntity(mealReqDto);
 
-        String imageUrl = imageService.upLoadImageAndGetUrl(image);
+        String imageUrl = imageService.upLoadImageAndGetUrl(image, MinioBuckets.MEALS);
         mealEntity.setImage(imageUrl);
 
         MealCategoryEntity category = mealCategoryService.getCategoryEntity(mealReqDto.getCategoryId());
@@ -80,7 +81,7 @@ public class MealService {
         if (image == null) {
             updatedMeal.setImage(oldMeal.getImage());
         } else {
-            String imageUrl = imageService.upLoadImageAndGetUrl(image);
+            String imageUrl = imageService.upLoadImageAndGetUrl(image , MinioBuckets.MEALS);
             updatedMeal.setImage(imageUrl);
             imageService.deleteImage(oldMeal.getImage());
         }

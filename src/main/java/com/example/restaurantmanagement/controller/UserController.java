@@ -7,6 +7,7 @@ import com.example.restaurantmanagement.model.auth.UserEmailDto;
 import com.example.restaurantmanagement.model.user.UserCreateDto;
 import com.example.restaurantmanagement.model.user.UserDto;
 import com.example.restaurantmanagement.model.user.UserUpdateDto;
+import com.example.restaurantmanagement.model.user.VerifyEmailDto;
 import com.example.restaurantmanagement.service.EmailVerificationService;
 import com.example.restaurantmanagement.service.UserService;
 import jakarta.validation.Valid;
@@ -43,7 +44,7 @@ public class UserController {
 
     @PostMapping("/verifyEmail")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseMessage verifyEmail(@RequestParam String email) {
+    public ResponseMessage verifyEmail(@RequestBody @Valid VerifyEmailDto email) {
         return emailVerificationService.verifyEmail(email);
     }
 
