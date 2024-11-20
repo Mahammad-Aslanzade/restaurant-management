@@ -9,6 +9,7 @@ import com.example.restaurantmanagement.exceptions.AlreadyExistException;
 import com.example.restaurantmanagement.exceptions.NotFoundException;
 import com.example.restaurantmanagement.model.auth.ResponseMessage;
 import com.example.restaurantmanagement.model.user.VerifyEmailDto;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,9 +28,7 @@ public class EmailVerificationService {
     private final EmailService emailService;
     private final EmailVerificationRepository emailVerificationRepository;
     private final UserRepository userRepository;
-    private final int expireMinute = 5;
-    private final LocalDateTime definedMinuteAgo = LocalDateTime.now().minusMinutes(expireMinute);
-
+    private static final int expireMinute = 5;
     private static final Random random = new Random();
 
     public ResponseMessage verifyEmail(VerifyEmailDto emailDto) {
@@ -47,7 +46,7 @@ public class EmailVerificationService {
 
         //Checking request of user and Check session 2min if
 
-        if (lastRequest.isPresent() && lastRequest.get().getIssueDate().isAfter(definedMinuteAgo)) {
+        if (lastRequest.isPresent() && lastRequest.get().getIssueDate().isAfter(getDefinedMinuteAgo())) {
             throw new AlreadyExistException(
                     "Verification session has opened yet! Your verificitaion code already exist",
                     String.format("ACTION.ERROR.verificateEmail email : %s", email)
@@ -79,7 +78,7 @@ public class EmailVerificationService {
 
     public Boolean checkValidCode(String email, String code) {
         Optional<EmailVerificationEntity> lastRequest = emailVerificationRepository.findLatestEntity(email);
-        return lastRequest.isPresent() && lastRequest.get().getIssueDate().isAfter(definedMinuteAgo) && lastRequest.get().getVerificationCode().equals(code);
+        return lastRequest.isPresent() && lastRequest.get().getIssueDate().isAfter(getDefinedMinuteAgo()) && lastRequest.get().getVerificationCode().equals(code);
     }
 
     public void changeStatus(String email, VerificationStatus verificationStatus) {
@@ -94,7 +93,9 @@ public class EmailVerificationService {
         emailVerificationRepository.save(emailVerification);
     }
 
+    @Transactional
     public void defineExpiredCodes(){
+        LocalDateTime definedMinuteAgo = getDefinedMinuteAgo();
         List<EmailVerificationEntity> emailVerifications = emailVerificationRepository.findAllByVerificationStatus(VerificationStatus.PENDING);
         emailVerifications.forEach((verification)->{
             System.out.println(verification);
@@ -107,6 +108,10 @@ public class EmailVerificationService {
             }
         });
         emailVerificationRepository.saveAll(emailVerifications);
+    }
+
+    private LocalDateTime getDefinedMinuteAgo(){
+        return LocalDateTime.now().minusMinutes(expireMinute);
     }
 
 
