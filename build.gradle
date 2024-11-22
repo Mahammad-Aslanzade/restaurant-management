@@ -27,27 +27,30 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    //Data Base
+    // Data Base
     implementation 'org.postgresql:postgresql:42.7.3'
 
-    //Lombok
+    // Lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-    //MapStruct
+    // MapStruct
     implementation 'org.mapstruct:mapstruct:1.5.5.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
 
-    //Liquibase
+    // Liquibase
     implementation 'org.liquibase:liquibase-core:4.28.0'
 
-    //Validation
+    // Validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-    //Email Service
+    // Minio
+    implementation 'io.minio:minio:8.5.12'
+
+    // Email Service
     implementation 'org.springframework.boot:spring-boot-starter-mail:3.3.1'
 
-    //ThymeLeaf for sending email html
+    // ThymeLeaf for sending email html
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
     // Spring Security

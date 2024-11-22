@@ -1,5 +1,6 @@
 package com.example.restaurantmanagement.service;
 
+import com.example.restaurantmanagement.configuration.MinioBuckets;
 import com.example.restaurantmanagement.dao.entity.BannerEntity;
 import com.example.restaurantmanagement.dao.repository.jpa.BannerRepository;
 import com.example.restaurantmanagement.enums.ExceptionDetails;
@@ -59,7 +60,7 @@ public class BannerService {
             );
         }
         BannerEntity bannerEntity = bannerMapper.mapToEntity(bannerReqDto);
-        String imageUrl = imageService.upLoadImageAndGetUrl(image);
+        String imageUrl = imageService.upLoadImageAndGetUrl(image , MinioBuckets.BANNER);
         bannerEntity.setImage(imageUrl);
         bannerRepository.save(bannerEntity);
     }
@@ -71,7 +72,7 @@ public class BannerService {
         if (image == null) {
             bannerNew.setImage(bannerOld.getImage());
         } else {
-            String imageUrl = imageService.upLoadImageAndGetUrl(image);
+            String imageUrl = imageService.upLoadImageAndGetUrl(image, MinioBuckets.BANNER);
             bannerNew.setImage(imageUrl);
             imageService.deleteImage(bannerOld.getImage());
         }

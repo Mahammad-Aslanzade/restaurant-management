@@ -16,7 +16,8 @@ public interface EmailVerificationRepository extends JpaRepository<EmailVerifica
 
     Optional<EmailVerificationEntity> findByEmail(String email);
 
-    List<EmailVerificationEntity> findAllByVerificationStatusIsNot(VerificationStatus verificationStatus);
+//    List<EmailVerificationEntity> findAllByVerificationStatusIsNot(VerificationStatus verificationStatus);
 
+    List<EmailVerificationEntity> findAllByVerificationStatus(VerificationStatus verificationStatus);
 
 }

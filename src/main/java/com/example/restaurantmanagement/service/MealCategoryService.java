@@ -1,5 +1,6 @@
 package com.example.restaurantmanagement.service;
 
+import com.example.restaurantmanagement.configuration.MinioBuckets;
 import com.example.restaurantmanagement.dao.entity.MealCategoryEntity;
 import com.example.restaurantmanagement.dao.repository.jpa.MealCategoryRepository;
 import com.example.restaurantmanagement.dao.repository.jpa.MealRepository;
@@ -55,7 +56,7 @@ public class MealCategoryService {
     public void createMealCategory(MealCategoryReqDto mealCategoryReqDto) {
         log.info("ACTION.createMealCategory.start requestBody : {}", mealCategoryReqDto);
         MealCategoryEntity mealCategoryEntity = mealCategoryMapper.mapToEntity(mealCategoryReqDto);
-        String imageUrl = imageService.upLoadImageAndGetUrl(mealCategoryReqDto.getImage());
+        String imageUrl = imageService.upLoadImageAndGetUrl(mealCategoryReqDto.getImage() , MinioBuckets.MEAL_CATEGORIES);
         mealCategoryEntity.setImage(imageUrl);
         mealCategoryRepository.save(mealCategoryEntity);
         log.info("ACTION.createMealCategory.end requestBody : {}", mealCategoryReqDto);
@@ -70,7 +71,7 @@ public class MealCategoryService {
         if (mealCategoryReqDto.getImage() == null) {
             updatedMealCategory.setImage(oldMealCategory.getImage());
         } else {
-            String imageUrl = imageService.upLoadImageAndGetUrl(mealCategoryReqDto.getImage());
+            String imageUrl = imageService.upLoadImageAndGetUrl(mealCategoryReqDto.getImage(), MinioBuckets.MEAL_CATEGORIES);
             updatedMealCategory.setImage(imageUrl);
             imageService.deleteImage(oldMealCategory.getImage());
         }

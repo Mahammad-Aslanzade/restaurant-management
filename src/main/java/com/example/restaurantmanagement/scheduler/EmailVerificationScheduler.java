@@ -14,7 +14,7 @@ public class EmailVerificationScheduler {
     private final EmailVerificationService emailVerificationService;
 
 
-    @Scheduled(fixedRate = 120000) // every 2min
+    @Scheduled(fixedRate = 60000) // every 1min
     public void defineExpiredCodes(){
         log.info("ACTION.SCHEDULER.defineExpiredCodes.start");
         emailVerificationService.defineExpiredCodes();
