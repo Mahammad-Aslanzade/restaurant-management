@@ -5,6 +5,7 @@ import com.example.restaurantmanagement.dao.entity.MealCategoryEntity;
 import com.example.restaurantmanagement.dao.repository.jpa.MealCategoryRepository;
 import com.example.restaurantmanagement.dao.repository.jpa.MealRepository;
 import com.example.restaurantmanagement.enums.ExceptionDetails;
+import com.example.restaurantmanagement.exceptions.AlreadyExistException;
 import com.example.restaurantmanagement.exceptions.NotFoundException;
 import com.example.restaurantmanagement.exceptions.RelationExistException;
 import com.example.restaurantmanagement.mapper.MealCategoryMapper;
@@ -14,7 +15,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -31,6 +34,7 @@ public class MealCategoryService {
         log.info("ACTION.getAllCategories.start");
         List<MealCategoryEntity> mealCategoryEntities = mealCategoryRepository.findAll();
         List<MealCategoryDto> mealCategoryDtos = mealCategoryMapper.listToDto(mealCategoryEntities);
+        mealCategoryDtos.sort(Comparator.comparingInt(MealCategoryDto::getPosition));
         log.info("ACTION.getAllCategories.end");
         return mealCategoryDtos;
     }
@@ -55,8 +59,9 @@ public class MealCategoryService {
 
     public void createMealCategory(MealCategoryReqDto mealCategoryReqDto) {
         log.info("ACTION.createMealCategory.start requestBody : {}", mealCategoryReqDto);
+        checkPositionIsFullOrThrow(mealCategoryReqDto.getPosition());
         MealCategoryEntity mealCategoryEntity = mealCategoryMapper.mapToEntity(mealCategoryReqDto);
-        String imageUrl = imageService.upLoadImageAndGetUrl(mealCategoryReqDto.getImage() , MinioBuckets.MEAL_CATEGORIES);
+        String imageUrl = imageService.upLoadImageAndGetUrl(mealCategoryReqDto.getImage(), MinioBuckets.MEAL_CATEGORIES);
         mealCategoryEntity.setImage(imageUrl);
         mealCategoryRepository.save(mealCategoryEntity);
         log.info("ACTION.createMealCategory.end requestBody : {}", mealCategoryReqDto);
@@ -67,6 +72,10 @@ public class MealCategoryService {
         MealCategoryEntity oldMealCategory = getCategoryEntity(categoryId);
         MealCategoryEntity updatedMealCategory = mealCategoryMapper.mapToEntity(mealCategoryReqDto);
         updatedMealCategory.setId(oldMealCategory.getId());
+
+        if(!oldMealCategory.getPosition().equals(mealCategoryReqDto.getPosition())){
+            checkPositionIsFullOrThrow(mealCategoryReqDto.getPosition());
+        }
 
         if (mealCategoryReqDto.getImage() == null) {
             updatedMealCategory.setImage(oldMealCategory.getImage());
@@ -92,6 +101,15 @@ public class MealCategoryService {
         imageService.deleteImage(mealCategoryEntity.getImage());
 
         log.info("ACTION.deleteMealCategory.end categoryId : {}", categoryId);
+    }
+
+    private void checkPositionIsFullOrThrow(Integer position) {
+        if (mealCategoryRepository.existsByPosition(position)) {
+            throw new AlreadyExistException(
+                    ExceptionDetails.POSITION_IS_FULL.message(),
+                    ExceptionDetails.POSITION_IS_FULL.createLogMessage("createMealCategory")
+            );
+        }
     }
 
 }

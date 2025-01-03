@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MealCategoryDto {
     private String id;
+    private Integer position;
     private String title;
     private String image;
 }

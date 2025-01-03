@@ -26,7 +26,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.thymeleaf.context.Context;
 
 import java.util.List;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -158,7 +157,6 @@ public class UserService {
     public UserDto registerUser(UserCreateDto userCreateDto, Role role) {
         UserEntity user = userMapper.mapToEntity(userCreateDto);
         String password = passwordEncoder.encode(userCreateDto.getPassword());
-        user.setId(UUID.randomUUID().toString());
         user.setRole(role);
         user.setPassword(password);
         userRepository.save(user);

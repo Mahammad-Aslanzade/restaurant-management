@@ -1,5 +1,7 @@
-  databaseChangeLog:
-    - includeAll:
-        path: liquibase/1.0
-    - includeAll:
-        path: liquibase/1.1
+databaseChangeLog:
+  - includeAll:
+      path: liquibase/1.0
+  - includeAll:
+      path: liquibase/1.1
+  - includeAll:
+      path: liquibase/1.2

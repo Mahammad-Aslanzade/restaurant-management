@@ -23,19 +23,26 @@ public class MealCategoryController {
     }
 
     @GetMapping("/{categoryId}")
-    public MealCategoryDto getCategoryById(@PathVariable String categoryId){
+    public MealCategoryDto getCategoryById(@PathVariable String categoryId) {
         return mealCategoryService.getCategoryById(categoryId);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createCategory(@ModelAttribute @Valid MealCategoryReqDto mealCategoryReqDto){
+    public void createCategory(@ModelAttribute @Valid MealCategoryReqDto mealCategoryReqDto) {
         mealCategoryService.createMealCategory(mealCategoryReqDto);
     }
 
+    @PutMapping("/{mealCategoryId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateCategory(@PathVariable String mealCategoryId, @ModelAttribute @Valid MealCategoryReqDto mealCategoryReqDto) {
+        mealCategoryService.updateMealCategory(mealCategoryId, mealCategoryReqDto);
+    }
+
+
     @DeleteMapping("/{categoryId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCategory(@PathVariable String categoryId){
+    public void deleteCategory(@PathVariable String categoryId) {
         mealCategoryService.deleteMealCategory(categoryId);
     }
 

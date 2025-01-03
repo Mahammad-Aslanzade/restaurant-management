@@ -18,6 +18,7 @@ public class MealCategoryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+    private Integer position;
     private String title;
     private String image;
 }

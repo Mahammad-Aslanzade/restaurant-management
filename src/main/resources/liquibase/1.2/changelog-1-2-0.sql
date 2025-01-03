@@ -1,0 +1,1 @@
+ALTER TABLE meal_categories ADD COLUMN position INTEGER UNIQUE CHECK ( position > 0 );
