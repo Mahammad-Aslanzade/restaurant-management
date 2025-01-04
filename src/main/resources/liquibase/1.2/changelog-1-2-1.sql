@@ -1,0 +1,1 @@
+ALTER TABLE meal_categories ALTER COLUMN position SET NOT NULL;

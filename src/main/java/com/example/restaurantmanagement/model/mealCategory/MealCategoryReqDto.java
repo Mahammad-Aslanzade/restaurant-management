@@ -1,5 +1,6 @@
 package com.example.restaurantmanagement.model.mealCategory;
 
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MealCategoryReqDto {
+    @NotNull
     @Positive(message = "position must be positive")
     private Integer position;
     private String title;
