@@ -58,7 +58,7 @@ public class UserController {
         return userService.createUser(userCreateDto , Role.MODERATOR);
     }
 
-    @PostMapping("/resetPassword/get-token")
+    @PostMapping("/reset-Password/get-token")
     public ResponseMessage getResetPasswordToken(@RequestBody UserEmailDto reqDto) {
         return userService.getResetPasswordToken(reqDto);
     }

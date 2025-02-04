@@ -60,22 +60,22 @@ public class SecurityConfig {
                         // ----------------------------USER------------------------------
                         // Permit All
                         .requestMatchers(HttpMethod.POST, "/user/register").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/user/verifyEmail").permitAll()
-                        .requestMatchers("/user/resetPassword/getToken").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/user/verify-email").permitAll()
+                        .requestMatchers("/user/reset-password/get-token").permitAll()
                         // Every authenticated
-                        .requestMatchers(HttpMethod.GET, "/user/{userId}").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/user/{user-id}").authenticated()
                         // ADMIN & USER
                         .requestMatchers(HttpMethod.GET, "/user/customer").hasAnyAuthority(Role.ADMIN.name(), Role.MODERATOR.name())
                         .requestMatchers(HttpMethod.POST, "/user/register/moderator").hasAuthority(Role.ADMIN.name())
-                        .requestMatchers(HttpMethod.PUT, "/user/{userId}").hasAnyAuthority(Role.ADMIN.name(), Role.MODERATOR.name())
-                        .requestMatchers(HttpMethod.DELETE, "/user/{userId}").hasAuthority(Role.ADMIN.name())
+                        .requestMatchers(HttpMethod.PUT, "/user/{user-id}").hasAnyAuthority(Role.ADMIN.name(), Role.MODERATOR.name())
+                        .requestMatchers(HttpMethod.DELETE, "/user/{user-id}").hasAuthority(Role.ADMIN.name())
                         .requestMatchers("/user/**").hasAuthority(Role.ADMIN.name())
 
                         // ----------------------------ORDER------------------------------
                         .requestMatchers(HttpMethod.GET, "/order/user").authenticated()
                         .requestMatchers(HttpMethod.POST, "/order").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/order/{orderId}").authenticated()
-                        .requestMatchers(HttpMethod.PUT, "/order/{orderId}").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/order/{order-id}").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/order/{order-id}").authenticated()
                         .requestMatchers("/order/**").hasAnyAuthority(Role.ADMIN.name(), Role.MODERATOR.name())
 
                         // ----------------------------MEAL------------------------------
@@ -83,17 +83,17 @@ public class SecurityConfig {
                         .requestMatchers("/meal/**").hasAnyAuthority(Role.ADMIN.name(), Role.MODERATOR.name())
 
                         // ----------------------------MEAL_CATEGORY------------------------------
-                        .requestMatchers(HttpMethod.GET, "/mealCategory/**").permitAll()
-                        .requestMatchers("/mealCategory").hasAnyAuthority(Role.ADMIN.name(), Role.MODERATOR.name())
+                        .requestMatchers(HttpMethod.GET, "/meal-category/**").permitAll()
+                        .requestMatchers("/meal-category").hasAnyAuthority(Role.ADMIN.name(), Role.MODERATOR.name())
 
 
                         // ----------------------------RESERVATION------------------------------
-                        .requestMatchers("/reservation/user/{userId}").authenticated()
+                        .requestMatchers("/reservation/user/{user-id}").authenticated()
                         .requestMatchers("/reservation/user").authenticated()
                         .requestMatchers(HttpMethod.GET, "/reservation").hasAnyAuthority(Role.ADMIN.name(), Role.MODERATOR.name())
                         .requestMatchers(HttpMethod.POST, "/reservation").authenticated()
-                        .requestMatchers(HttpMethod.PUT, "/reservation/{reservationId}").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/reservation/{reservationId}").hasAnyAuthority(Role.ADMIN.name(), Role.MODERATOR.name())
+                        .requestMatchers(HttpMethod.PUT, "/reservation/{reservation-id}").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/reservation/{reservation-id}").hasAnyAuthority(Role.ADMIN.name(), Role.MODERATOR.name())
                         .requestMatchers("/reservation/**").hasAnyAuthority(Role.ADMIN.name(), Role.MODERATOR.name())
 
 
@@ -102,21 +102,21 @@ public class SecurityConfig {
                         .requestMatchers("/table/**").hasAnyAuthority(Role.ADMIN.name(), Role.MODERATOR.name())
 
                         // ----------------------------Feedback------------------------------
-                        .requestMatchers(HttpMethod.GET, "/feedback/{feedbackId}").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/feedback/{feedback-id}").authenticated()
                         .requestMatchers(HttpMethod.GET, "/feedback/user").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/feedback/user/{userId}").hasAuthority(Role.ADMIN.name())
+                        .requestMatchers(HttpMethod.GET, "/feedback/user/{user-id}").hasAuthority(Role.ADMIN.name())
                         .requestMatchers(HttpMethod.GET, "/feedback").hasAnyAuthority(Role.ADMIN.name(), Role.MODERATOR.name())
                         .requestMatchers(HttpMethod.POST, "/feedback").authenticated()
-                        .requestMatchers(HttpMethod.PUT, "/feedback/{feedbackId}").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/feedback/{feedbackId}").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/feedback/{feedback-id}").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/feedback/{feedback-id}").authenticated()
 
                         // ----------------------------Banner------------------------------
                         .requestMatchers(HttpMethod.GET, "/banner").permitAll()
                         .requestMatchers("/banner/**").hasAnyAuthority(Role.ADMIN.name(), Role.MODERATOR.name())
 
                         // ----------------------------AboutUs------------------------------
-                        .requestMatchers(HttpMethod.GET, "/aboutUs").permitAll()
-                        .requestMatchers("/aboutUs/**").hasAnyAuthority(Role.ADMIN.name(), Role.MODERATOR.name())
+                        .requestMatchers(HttpMethod.GET, "/about-us").permitAll()
+                        .requestMatchers("/about-us/**").hasAnyAuthority(Role.ADMIN.name(), Role.MODERATOR.name())
 
                         // ----------------------------Address------------------------------
                         .requestMatchers(HttpMethod.GET, "/address").hasAnyAuthority(Role.ADMIN.name(), Role.MODERATOR.name())
