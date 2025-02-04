@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 
 @RestController
-@RequestMapping("/banner")
+@RequestMapping("/banners")
 public class BannerController {
 
     private final BannerService bannerService;

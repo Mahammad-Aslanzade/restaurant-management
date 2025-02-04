@@ -23,7 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 
 @RestController
-@RequestMapping("/meal")
+@RequestMapping("/meals")
 public class MealController {
 
     private final MealService mealService;

@@ -21,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/orders")
 public class OrderController {
 
     private final OrderService orderService;
@@ -31,7 +31,7 @@ public class OrderController {
         return orderService.getAllOrders();
     }
 
-    @GetMapping("/user")
+    @GetMapping("/current-user")
     public List<OrderDto> getCurrentUserOrders() {
         return orderService.getCurrentUserOrders();
     }

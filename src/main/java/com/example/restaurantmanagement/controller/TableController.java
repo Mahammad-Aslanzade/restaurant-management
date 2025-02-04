@@ -12,7 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 
 @RestController
-@RequestMapping("/table")
+@RequestMapping("/tables")
 public class TableController {
 
     private final TableService tableService;

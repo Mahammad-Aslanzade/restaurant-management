@@ -22,7 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 
 @RestController
-@RequestMapping("/reservation")
+@RequestMapping("/reservations")
 public class ReservationController {
 
     private final ReservationService reservationService;
@@ -37,7 +37,7 @@ public class ReservationController {
         return reservationService.getReservationById(reservationId);
     }
 
-    @GetMapping("/user")
+    @GetMapping("/current-user")
     public List<ReservationWithoutUser> getCurrentReservations() {
         return reservationService.getCurrentReservations();
     }

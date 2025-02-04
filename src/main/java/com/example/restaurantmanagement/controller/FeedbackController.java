@@ -22,7 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 
 @RestController
-@RequestMapping("/feedback")
+@RequestMapping("/feedbacks")
 public class FeedbackController {
 
     private final FeedbackService feedbackService;
@@ -37,7 +37,7 @@ public class FeedbackController {
         return feedbackService.getFeedbackById(feedBackId);
     }
 
-    @GetMapping("/user")
+    @GetMapping("/current-user")
     public List<FeedbackDto> getCurrentUserFeedbacks() {
         return feedbackService.getCurrentUserFeedbacks();
     }

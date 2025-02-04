@@ -21,13 +21,13 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/address")
+@RequestMapping("/addresses")
 public class AddressController {
 
     private final AddressService addressService;
 
     @GetMapping
-    public List<AddressDto> getAllAddreses() {
+    public List<AddressDto> getAllAddresses() {
         return addressService.getAllAddreses();
     }
 
