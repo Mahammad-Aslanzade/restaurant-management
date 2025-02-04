@@ -11,13 +11,13 @@ import com.example.restaurantmanagement.exceptions.RelationExistException;
 import com.example.restaurantmanagement.mapper.MealCategoryMapper;
 import com.example.restaurantmanagement.model.mealCategory.MealCategoryDto;
 import com.example.restaurantmanagement.model.mealCategory.MealCategoryReqDto;
+import com.example.restaurantmanagement.model.mealCategory.MealCategoryWithMealsDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -112,4 +112,11 @@ public class MealCategoryService {
         }
     }
 
+    public List<MealCategoryWithMealsDto> getAllCategoriesWithMeals() {
+        log.info("ACTION.getAllCategoriesWithMeals.start");
+        List<MealCategoryEntity> mealCategoryEntities = mealCategoryRepository.findAll();
+        List<MealCategoryWithMealsDto> mealCategoryWithMealsDtos = mealCategoryMapper.mapToWithMealsDtoList(mealCategoryEntities);
+        log.info("ACTION.getAllCategoriesWithMeals.end");
+        return mealCategoryWithMealsDtos;
+    }
 }

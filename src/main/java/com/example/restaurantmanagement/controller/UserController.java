@@ -32,8 +32,8 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @GetMapping("/{userId}")
-    public UserDto getUserById(@PathVariable String userId) {
+    @GetMapping("/{user-id}")
+    public UserDto getUserById(@PathVariable("user-id") String userId) {
         return userService.getUserById(userId);
     }
 
@@ -42,7 +42,7 @@ public class UserController {
         return userService.getCustomers();
     }
 
-    @PostMapping("/verifyEmail")
+    @PostMapping("/verify-email")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseMessage verifyEmail(@RequestBody @Valid VerifyEmailDto email) {
         return emailVerificationService.verifyEmail(email);
@@ -58,24 +58,24 @@ public class UserController {
         return userService.createUser(userCreateDto , Role.MODERATOR);
     }
 
-    @PostMapping("/resetPassword/getToken")
+    @PostMapping("/resetPassword/get-token")
     public ResponseMessage getResetPasswordToken(@RequestBody UserEmailDto reqDto) {
         return userService.getResetPasswordToken(reqDto);
     }
 
-    @PostMapping("/resetPassword")
-    public ResponseMessage resetPassoword(@RequestBody ResetPassReqDto resetPassReqDto){
+    @PostMapping("/reset-password")
+    public ResponseMessage resetPassword(@RequestBody ResetPassReqDto resetPassReqDto){
         return userService.resetPassword(resetPassReqDto);
     }
 
-    @PutMapping("/{userId}")
-    public void updateUser(@PathVariable String userId, @RequestBody @Valid UserUpdateDto userUpdateDto) {
+    @PutMapping("/{user-id}")
+    public void updateUser(@PathVariable("user-id") String userId, @RequestBody @Valid UserUpdateDto userUpdateDto) {
         userService.updateUser(userId, userUpdateDto);
     }
 
-    @DeleteMapping("/{userId}")
+    @DeleteMapping("/{user-id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable String userId) {
+    public void deleteUser(@PathVariable("user-id") String userId) {
         userService.deleteUser(userId);
     }
 

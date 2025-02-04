@@ -35,7 +35,7 @@ public class MealEntity {
     private Double rate;
     @OneToMany(mappedBy = "meal" , orphanRemoval = true)
     private List<FeedbackEntity> feedbackEntities;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "category")
     private MealCategoryEntity category;
 

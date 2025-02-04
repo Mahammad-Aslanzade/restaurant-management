@@ -21,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -97,29 +96,29 @@ public class OrderService {
         return orderDtoList;
     }
 
-    public List<OrderDto> filterByPaymentMethod(String paymentMethod) {
+    public List<OrderDto> filterByPaymentMethod(PaymentType paymentMethod) {
         log.info("ACTION.filterByPaymentMethod.start method : {}", paymentMethod);
-        PaymentType type;
-        try {
-            type = PaymentType.convertToEnum(paymentMethod);
-        } catch (IllegalArgumentException ex) {
-            throw new InvalidException(
-                    paymentMethod,
-                    "is not valid method of payment",
-                    String.format("ACTION.ERROR.convertToEnum paymentType : %s", paymentMethod)
-            );
-        }
-        List<OrderEntity> orderEntityList = orderRepository.findAllByPaymentType(type);
+//        PaymentType type;
+//        try {
+//            type = PaymentType.convertToEnum(paymentMethod);
+//        } catch (IllegalArgumentException ex) {
+//            throw new InvalidException(
+//                    paymentMethod,
+//                    "is not valid method of payment",
+//                    String.format("ACTION.ERROR.convertToEnum paymentType : %s", paymentMethod)
+//            );
+//        }
+        List<OrderEntity> orderEntityList = orderRepository.findAllByPaymentType(paymentMethod);
         List<OrderDto> orderDtoList = orderMapper.listToDto(orderEntityList);
         log.info("ACTION.filterByPaymentMethod.end method : {}", paymentMethod);
         return orderDtoList;
     }
 
-    private void checkOrderBelongTo(OrderEntity order ,UserEntity user){
-        if(order.getUser() != user){
+    private void checkOrderBelongTo(OrderEntity order, UserEntity user) {
+        if (order.getUser() != user) {
             throw new NotAllowedException(
                     "This order not belong to you !",
-                    String.format("ACTION.ERROR.checkOrderBelogTo userId : %s | orderId : %s", user.getId() , order.getId())
+                    String.format("ACTION.ERROR.checkOrderBelogTo userId : %s | orderId : %s", user.getId(), order.getId())
             );
         }
     }
@@ -150,7 +149,7 @@ public class OrderService {
         OrderStatus status = updateStatusDto.getStatus();
         log.info("ACTION.updateOrderStatus.start orderId : {} | status : {}", orderId, status);
         OrderEntity order = getOrderEntity(orderId);
-        checkOrderBelongTo(order , user);
+        checkOrderBelongTo(order, user);
         order.setStatus(status);
         orderRepository.save(order);
         log.info("ACTION.updateOrderStatus.end orderId : {} | status : {}", orderId, status);
@@ -164,13 +163,13 @@ public class OrderService {
         // User and Address
         UserEntity user = userDetailService.getCurrentAuthenticatedUser();
         // Check USER & ORDER realation
-        checkOrderBelongTo(oldOrder , user);
+        checkOrderBelongTo(oldOrder, user);
         AddressEntity address = userService.haveThisAddress(user, orderUpdateDto.getAddressId());
         updatedOrder.setUser(user);
         updatedOrder.setAddress(address);
         // Total amount
         Double totalPrice = mealService.calculateTotalPrice(orderUpdateDto.getMealList());
-        log.info("HERE-----------{}",totalPrice);
+        log.info("HERE-----------{}", totalPrice);
         updatedOrder.setTotalPrice(totalPrice);
         orderRepository.save(updatedOrder);
         log.info("ACTION.updateOrder.end orderId : {} | requestDto : {}", orderId, orderUpdateDto);

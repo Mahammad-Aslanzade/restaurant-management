@@ -1,6 +1,5 @@
 package com.example.restaurantmanagement.model.meal;
 
-import com.example.restaurantmanagement.model.mealCategory.MealCategoryDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,12 +9,11 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MealDto {
+public class MealWithoutCategoryDto {
     private String id;
     private String title;
     private String image;
     private List<String> ingredientsList;
-    private MealCategoryDto category;
     private String description;
     private Double carbohydrates;
     private Double calories;

@@ -3,6 +3,7 @@ package com.example.restaurantmanagement.mapper;
 import com.example.restaurantmanagement.dao.entity.MealCategoryEntity;
 import com.example.restaurantmanagement.model.mealCategory.MealCategoryDto;
 import com.example.restaurantmanagement.model.mealCategory.MealCategoryReqDto;
+import com.example.restaurantmanagement.model.mealCategory.MealCategoryWithMealsDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -17,4 +18,6 @@ public interface MealCategoryMapper {
 
     @Mapping(target = "image", ignore = true)
     MealCategoryEntity mapToEntity(MealCategoryReqDto mealCategoryReqDto);
+
+    List<MealCategoryWithMealsDto> mapToWithMealsDtoList(List<MealCategoryEntity> mealCategoryEntities);
 }

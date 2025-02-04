@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,4 +23,7 @@ public class MealCategoryEntity {
     private Integer position;
     private String title;
     private String image;
+
+    @OneToMany(mappedBy = "category")
+    private List<MealEntity> meal;
 }

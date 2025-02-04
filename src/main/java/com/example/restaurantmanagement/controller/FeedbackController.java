@@ -7,7 +7,15 @@ import com.example.restaurantmanagement.service.FeedbackService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -24,18 +32,18 @@ public class FeedbackController {
         return feedbackService.getAllFeedbacks();
     }
 
-    @GetMapping("/{feedBackId}")
-    public FeedbackDto getFeedbackById(@PathVariable String feedBackId) {
+    @GetMapping("/{feedback-id}")
+    public FeedbackDto getFeedbackById(@PathVariable("feedback-id") String feedBackId) {
         return feedbackService.getFeedbackById(feedBackId);
     }
 
     @GetMapping("/user")
-    public List<FeedbackDto> getCurrentUserFeedbacks(){
+    public List<FeedbackDto> getCurrentUserFeedbacks() {
         return feedbackService.getCurrentUserFeedbacks();
     }
 
-    @GetMapping("/user/{userId}")
-    public List<FeedbackDto> getFeedbackByUser(@PathVariable String userId){
+    @GetMapping("/user/{user-id}")
+    public List<FeedbackDto> getFeedbackByUser(@PathVariable("user-id") String userId) {
         return feedbackService.getFeedbackByUser(userId);
     }
 
@@ -45,14 +53,14 @@ public class FeedbackController {
         feedbackService.postFeedback(feedbackCDto);
     }
 
-    @PutMapping("/{feedbackId}")
-    public void updateFeedback(@PathVariable String feedbackId, @RequestBody @Valid FeedbackUDto feedbackUDto) {
+    @PutMapping("/{feedback-id}")
+    public void updateFeedback(@PathVariable("feedback-id") String feedbackId, @RequestBody @Valid FeedbackUDto feedbackUDto) {
         feedbackService.updateFeedback(feedbackId, feedbackUDto);
     }
 
-    @DeleteMapping("/{feedbackId}")
+    @DeleteMapping("/{feedback-id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteFeedback(@PathVariable String feedbackId){
+    public void deleteFeedback(@PathVariable("feedback-id") String feedbackId) {
         feedbackService.deleteFeedback(feedbackId);
     }
 }

@@ -7,7 +7,15 @@ import com.example.restaurantmanagement.service.ReservationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -24,23 +32,23 @@ public class ReservationController {
         return reservationService.getAllReservations();
     }
 
-    @GetMapping("/{reservationId}")
-    public ReservationDto getReservationById(@PathVariable String reservationId) {
+    @GetMapping("/{reservation-id}")
+    public ReservationDto getReservationById(@PathVariable("reservation-id") String reservationId) {
         return reservationService.getReservationById(reservationId);
     }
 
     @GetMapping("/user")
-    public List<ReservationWithoutUser> getCurrentReservations(){
+    public List<ReservationWithoutUser> getCurrentReservations() {
         return reservationService.getCurrentReservations();
     }
 
-    @GetMapping("/user/{userId}")
-    public List<ReservationDto> getUserReservations(@PathVariable String userId){
+    @GetMapping("/user/{user-id}")
+    public List<ReservationDto> getUserReservations(@PathVariable("user-id") String userId) {
         return reservationService.getUserReservations(userId);
     }
 
-    @GetMapping("/table/{tableId}")
-    public List<ReservationDto> getTableReservations(@PathVariable String tableId){
+    @GetMapping("/table/{table-id}")
+    public List<ReservationDto> getTableReservations(@PathVariable("table-id") String tableId) {
         return reservationService.getTableReservations(tableId);
     }
 
@@ -50,14 +58,14 @@ public class ReservationController {
         reservationService.createReservation(reservationCUDto);
     }
 
-    @PutMapping("/{reservationId}")
-    public void updateReservation(@PathVariable String reservationId, @RequestBody @Valid ReservationCUDto reservationCUDto) {
+    @PutMapping("/{reservation-id}")
+    public void updateReservation(@PathVariable("reservation-id") String reservationId, @RequestBody @Valid ReservationCUDto reservationCUDto) {
         reservationService.updateReservation(reservationId, reservationCUDto);
     }
 
-    @DeleteMapping("/{reservationId}")
+    @DeleteMapping("/{reservation-id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteReservation(@PathVariable String reservationId) {
+    public void deleteReservation(@PathVariable("reservation-id") String reservationId) {
         reservationService.deleteReservation(reservationId);
     }
 

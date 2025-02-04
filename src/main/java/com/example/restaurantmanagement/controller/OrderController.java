@@ -1,12 +1,20 @@
 package com.example.restaurantmanagement.controller;
 
+import com.example.restaurantmanagement.enums.PaymentType;
 import com.example.restaurantmanagement.model.order.OrderCreateDto;
 import com.example.restaurantmanagement.model.order.OrderDto;
 import com.example.restaurantmanagement.model.order.OrderUpdateDto;
 import com.example.restaurantmanagement.model.order.UpdateStatusDto;
 import com.example.restaurantmanagement.service.OrderService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -24,27 +32,27 @@ public class OrderController {
     }
 
     @GetMapping("/user")
-    public List<OrderDto> getCurrentUserOrders(){
+    public List<OrderDto> getCurrentUserOrders() {
         return orderService.getCurrentUserOrders();
     }
 
-    @GetMapping("/user/{userId}")
-    public List<OrderDto> getUserOrders(@PathVariable String userId){
+    @GetMapping("/user/{user-id}")
+    public List<OrderDto> getUserOrders(@PathVariable("user-id") String userId) {
         return orderService.getUserOrders(userId);
     }
 
-    @GetMapping("/{orderId}")
-    public OrderDto getOrderById(@PathVariable String orderId) {
+    @GetMapping("/{order-id}")
+    public OrderDto getOrderById(@PathVariable("order-id") String orderId) {
         return orderService.getOrderById(orderId);
     }
 
-    @GetMapping("/type/{orderType}")
-    public List<OrderDto> filterByType(@PathVariable String orderType) {
+    @GetMapping("/type/{order-type}")
+    public List<OrderDto> filterByType(@PathVariable("order-type") String orderType) {
         return orderService.filterByType(orderType);
     }
 
-    @GetMapping("/paymentMethod/{paymentMethod}")
-    public List<OrderDto> filterByPaymentMethod(@PathVariable String paymentMethod) {
+    @GetMapping("/payment-method/{payment-method}")
+    public List<OrderDto> filterByPaymentMethod(@PathVariable("payment-method") PaymentType paymentMethod) {
         return orderService.filterByPaymentMethod(paymentMethod);
     }
 
@@ -53,13 +61,13 @@ public class OrderController {
         orderService.createOrder(orderCreateDto);
     }
 
-    @PatchMapping("/{orderId}/changeStatus")
-    public void updateOrderStatus(@PathVariable String orderId, @RequestBody UpdateStatusDto updateStatusDto) {
+    @PatchMapping("/{order-id}/change-status")
+    public void updateOrderStatus(@PathVariable("order-id") String orderId, @RequestBody UpdateStatusDto updateStatusDto) {
         orderService.updateOrderStatus(orderId, updateStatusDto);
     }
 
-    @PutMapping("/{orderId}")
-    public void updateOrder(@PathVariable String orderId , @RequestBody OrderUpdateDto orderUpdateDto){
-        orderService.updateOrder(orderId , orderUpdateDto);
+    @PutMapping("/{order-id}")
+    public void updateOrder(@PathVariable("order-id") String orderId, @RequestBody OrderUpdateDto orderUpdateDto) {
+        orderService.updateOrder(orderId, orderUpdateDto);
     }
 }

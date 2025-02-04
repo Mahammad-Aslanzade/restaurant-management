@@ -22,8 +22,8 @@ public class TableController {
         return tableService.getAllTables();
     }
 
-    @GetMapping("/{tableId}")
-    public TableDto getTableById(@PathVariable String tableId) {
+    @GetMapping("/{table-id}")
+    public TableDto getTableById(@PathVariable("table-id") String tableId) {
         return tableService.getTableById(tableId);
     }
 
@@ -33,14 +33,14 @@ public class TableController {
         tableService.createTable(tableDto);
     }
 
-    @PutMapping("/{tableId}")
-    public void updateTable(@PathVariable String tableId, @RequestBody @Valid TableDto tableDto) {
+    @PutMapping("/{table-id}")
+    public void updateTable(@PathVariable("table-id") String tableId, @RequestBody @Valid TableDto tableDto) {
         tableService.updateTable(tableId, tableDto);
     }
 
-    @DeleteMapping("/{tableId}")
+    @DeleteMapping("/{table-id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteTable(@PathVariable String tableId){
+    public void deleteTable(@PathVariable("table-id") String tableId){
         tableService.deleteTable(tableId);
     }
 }

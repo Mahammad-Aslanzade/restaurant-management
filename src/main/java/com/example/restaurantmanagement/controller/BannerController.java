@@ -24,8 +24,8 @@ public class BannerController {
         return bannerService.getAllBanners();
     }
 
-    @GetMapping("/{bannerId}")
-    public BannerDto getById(@PathVariable String bannerId){
+    @GetMapping("/{banner-id}")
+    public BannerDto getById(@PathVariable("banner-id") String bannerId){
         return bannerService.getById(bannerId);
     }
 
@@ -35,14 +35,14 @@ public class BannerController {
         bannerService.createBanner(image , bannerReqDto);
     }
 
-    @PutMapping("/{bannerId}")
-    public void updateBanner(@PathVariable String bannerId , @RequestPart(value = "image",required = false) MultipartFile image , @RequestPart("bannerDetail") @Valid BannerReqDto bannerReqDto){
+    @PutMapping("/{banner-id}")
+    public void updateBanner(@PathVariable("banner-id") String bannerId , @RequestPart(value = "image",required = false) MultipartFile image , @RequestPart("bannerDetail") @Valid BannerReqDto bannerReqDto){
         bannerService.updateBanner(bannerId , image , bannerReqDto);
     }
 
-    @DeleteMapping("/{bannerId}")
+    @DeleteMapping("/{banner-id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteBanner(@PathVariable String bannerId){
+    public void deleteBanner(@PathVariable("banner-id") String bannerId){
         bannerService.deleteBanner(bannerId);
     }
 }
