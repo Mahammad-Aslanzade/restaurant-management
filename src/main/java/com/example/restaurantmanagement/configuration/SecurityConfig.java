@@ -56,6 +56,8 @@ public class SecurityConfig {
 
                         // ----------------------------UPLOADS------------------------------
                         .requestMatchers("/uploads/**").permitAll()
+                        // ----------------------------DEPLOY------------------------------
+                        .requestMatchers("/deploy/**").permitAll()
 
                         // ----------------------------USER------------------------------
                         // Permit All
