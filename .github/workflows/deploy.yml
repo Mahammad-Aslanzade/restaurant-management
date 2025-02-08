@@ -3,7 +3,7 @@ name: Deploy Spring Boot App with Docker
 on:
   push:
     branches:
-      - main  # Change this if needed
+      - master  # Change this if needed
 
 jobs:
   deploy:
