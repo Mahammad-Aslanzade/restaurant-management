@@ -3,7 +3,7 @@ name: Deploy Spring Boot App with Docker
 on:
   push:
     branches:
-      - master  # Change this if needed
+      - master
 
 jobs:
   deploy:
@@ -22,8 +22,11 @@ jobs:
       - name: Set up Gradle
         uses: gradle/gradle-build-action@v3
 
-      - name: Clean and Build Spring Boot App
-        run: ./gradlew clean build -x test
+      - name: Clean Spring Boot App
+        run: ./gradlew clean
+
+      - name: Build Spring Boot App
+        run: ./gradlew build -x test
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -31,32 +34,25 @@ jobs:
       - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      - name: Build and Push Docker Image
+      - name: Build Docker Image (No Cache)
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/spring-app:latest .
-          docker push ${{ secrets.DOCKER_USERNAME }}/spring-app:latest
-
-      - name: Set up SSH Key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SERVER_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+          docker build --no-cache -t ${{ secrets.DOCKER_USERNAME }}/restaurant-api:${{ github.sha }} .
+          docker push ${{ secrets.DOCKER_USERNAME }}/restaurant-api:${{ github.sha }}
 
       - name: Deploy on Remote Server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
             # Stop and remove the existing container if running
-            docker-compose -f ${{ secrets.DOCKER_COMPOSE_PATH }} down || true
+            docker-compose -f /path/to/docker-compose.yml down || true
           
             # Remove the old Docker image (ignore errors if it doesn't exist)
-            docker rmi ${{ secrets.DOCKER_USERNAME }}/spring-app:latest || true
+            docker rmi ${{ secrets.DOCKER_USERNAME }}/restaurant-api:${{ github.sha }} || true
           
             # Pull the new image
-            docker pull ${{ secrets.DOCKER_USERNAME }}/spring-app:latest
+            docker pull ${{ secrets.DOCKER_USERNAME }}/restaurant-api:${{ github.sha }}
           
             # Start the updated service
-            docker-compose -f ${{ secrets.DOCKER_COMPOSE_PATH }} up -d
+            docker-compose -f /path/to/docker-compose.yml up -d
           
             # Clean up dangling images
             docker image prune -f
