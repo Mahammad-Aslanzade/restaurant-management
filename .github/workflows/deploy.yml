@@ -41,6 +41,13 @@ jobs:
         run: |
           docker build --no-cache -t ${{ secrets.DOCKER_USERNAME }}/restaurant-api:${{ github.sha }} .
           docker push ${{ secrets.DOCKER_USERNAME }}/restaurant-api:${{ github.sha }}
+          -
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SERVER_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
       - name: Deploy on Remote Server
         run: |
