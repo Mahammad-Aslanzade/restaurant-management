@@ -6,7 +6,6 @@ import com.example.restaurantmanagement.dao.repository.jpa.ResetPasswordReposito
 import com.example.restaurantmanagement.dao.repository.jpa.UserRepository;
 import com.example.restaurantmanagement.enums.ExceptionDetails;
 import com.example.restaurantmanagement.exceptions.InvalidException;
-import com.example.restaurantmanagement.exceptions.NotAllowedException;
 import com.example.restaurantmanagement.exceptions.NotFoundException;
 import com.example.restaurantmanagement.model.auth.ResetPassReqDto;
 import com.example.restaurantmanagement.model.auth.ResponseMessage;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
