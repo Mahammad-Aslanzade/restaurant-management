@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResetPassReqDto {
+    private String validationCode;
     private String password;
     private String confirmPassword;
 }

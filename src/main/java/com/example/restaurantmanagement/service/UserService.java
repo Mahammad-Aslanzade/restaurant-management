@@ -26,6 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.thymeleaf.context.Context;
 
 import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -36,9 +37,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final EmailVerificationService emailVerificationService;
     private final PasswordEncoder passwordEncoder;
-    private final EmailService emailService;
-    private final JwtTokenUtil jwtTokenUtil;
-    private final MyUserDetailService userDetailService;
 
 
     public List<UserDto> getAllUsers() {
@@ -161,51 +159,6 @@ public class UserService {
         user.setPassword(password);
         userRepository.save(user);
         return userMapper.mapToDto(user);
-    }
-
-    public ResponseMessage getResetPasswordToken(UserEmailDto reqDto) {
-        String email = reqDto.getEmail();
-
-        log.info("ACTION.getResetPasswordToken.start email : {}", email);
-
-        // Check user exist?
-        UserEntity user = getUserEntityByEmail(email);
-
-        //Genereate token
-        UserDetails userDetails = userDetailService.loadUserByUsername(email);
-        String token = jwtTokenUtil.generateToken(userDetails);
-
-        // Email action
-        String templateName = "reset-password";
-        String redirectUrl =  String.format("http://localhost:5173/user/resetPassword/%s" , token);
-        Context context = new Context();
-        context.setVariable("resetUrl", redirectUrl);
-        context.setVariable("userName" , user.getName());
-        emailService.sendEmailWithHtmlTemplate(
-                user.getEmail(), "Reset password" ,
-                templateName , context
-        );
-
-        log.info("ACTION.getResetPasswordToken.start email : {}", email);
-        return new ResponseMessage("Operation completed successfully !");
-    }
-
-    public ResponseMessage resetPassword(ResetPassReqDto resetPassReqDto){
-        UserEntity client = userDetailService.getCurrentAuthenticatedUser();
-        log.info("ACTION.resetPassword.start email : {}", client.getEmail());
-
-        if( !resetPassReqDto.getPassword().equals(resetPassReqDto.getConfirmPassword())){
-            throw new InvalidException(
-                    "confirmPassword" , "passwords don't match",
-                    String.format("ACTION.ERROR.resetPassword  email : %s | message : password don't match" , client.getEmail())
-            );
-        }
-
-        client.setPassword(passwordEncoder.encode(resetPassReqDto.getPassword()));
-        userRepository.save(client);
-
-        log.info("ACTION.resetPassword.end email : {}", client.getEmail());
-        return new ResponseMessage("Operation completed successfully !");
     }
 
 }

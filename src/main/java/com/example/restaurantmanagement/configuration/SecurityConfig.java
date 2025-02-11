@@ -63,7 +63,7 @@ public class SecurityConfig {
                         // Permit All
                         .requestMatchers(HttpMethod.POST, "/users/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/users/verify-email").permitAll()
-                        .requestMatchers("/users/reset-password/get-token").permitAll()
+                        .requestMatchers("/account/reset-password/**").permitAll()
                         // Every authenticated
                         .requestMatchers(HttpMethod.GET, "/users/{user-id}").authenticated()
                         // ADMIN & USER
