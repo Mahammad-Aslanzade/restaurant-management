@@ -39,7 +39,7 @@ jobs:
 
       - name: Build Docker Image (No Cache)
         run: |
-          docker build --no-cache -t ${{ secrets.DOCKER_USERNAME }}/restaurant-api:${{ github.sha }} .
+          docker build --no-cache -t ${{ secrets.DOCKER_USERNAME }}/restaurant-api .
           docker push ${{ secrets.DOCKER_USERNAME }}/restaurant-api
 
       - name: Set up SSH key
