@@ -53,7 +53,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
             # Stop and remove the existing container if running
-            docker-compose -f /path/to/docker-compose.yml down || true
+            docker-compose -f ${{ secrets.DOCKER_COMPOSE_PATH }} down || true
           
             # Remove the old Docker image (ignore errors if it doesn't exist)
             docker rmi ${{ secrets.DOCKER_USERNAME }}/restaurant-api:${{ github.sha }} || true
@@ -62,7 +62,7 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/restaurant-api:${{ github.sha }}
           
             # Start the updated service
-            docker-compose -f /path/to/docker-compose.yml up -d
+            docker-compose -f ${{ secrets.DOCKER_COMPOSE_PATH }} up -d
           
             # Clean up dangling images
             docker image prune -f
