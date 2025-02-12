@@ -40,7 +40,7 @@ jobs:
       - name: Build Docker Image (No Cache)
         run: |
           docker build --no-cache -t ${{ secrets.DOCKER_USERNAME }}/restaurant-api:${{ github.sha }} .
-          docker push ${{ secrets.DOCKER_USERNAME }}/restaurant-api:${{ github.sha }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/restaurant-api
 
       - name: Set up SSH key
         run: |
@@ -54,7 +54,8 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
             
             # Stop
-            docker stop restaurant-java-server
+            docker stop restaurant-backend
+            docker remove restaurant-backend
             docker image remove ${{ secrets.DOCKER_USERNAME}}/restaurant-api
             docker image remove restaurant-java-server         
           
