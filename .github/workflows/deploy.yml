@@ -63,5 +63,5 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/restaurant-api
             docker tag ${{ secrets.DOCKER_USERNAME }}/restaurant-api restaurant-java-server
           
-            docker-compose -f ${{ secrets.DOCKER_COMPOSE_PATH }} up -d
+            docker compose -f ${{ secrets.DOCKER_COMPOSE_PATH }} up -d
           EOF
