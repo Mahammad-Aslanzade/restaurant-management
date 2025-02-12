@@ -64,4 +64,6 @@ jobs:
             docker tag ${{ secrets.DOCKER_USERNAME }}/restaurant-api restaurant-java-server
           
             docker compose -f ${{ secrets.DOCKER_COMPOSE_PATH }} up -d
+            
+            sudo systemctl reload nginx
           EOF
