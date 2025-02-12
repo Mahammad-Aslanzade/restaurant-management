@@ -33,7 +33,8 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
         configuration.addAllowedOrigin("http://localhost:5173");
-        configuration.addAllowedOrigin("https://dashboard.frango.software");
+//        configuration.addAllowedOrigin("https://dashboard.frango.software");
+        configuration.addAllowedOriginPattern("https://*.frango.software");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

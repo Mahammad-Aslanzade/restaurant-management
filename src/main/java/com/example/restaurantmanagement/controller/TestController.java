@@ -10,6 +10,6 @@ public class TestController {
 
     @GetMapping
     private String deployTest(){
-        return "v1/test/is-running";
+        return "v1/test/is-running/in unibank";
     }
 }
