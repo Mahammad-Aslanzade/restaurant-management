@@ -52,18 +52,15 @@ jobs:
       - name: Deploy on Remote Server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-            # Stop and remove the existing container if running
-            docker-compose -f ${{ secrets.DOCKER_COMPOSE_PATH }} down || true
+            
+            # Stop
+            docker stop restaurant-java-server
+            docker image remove ${{ secrets.DOCKER_USERNAME}}/restaurant-api
+            docker image remove restaurant-java-server         
           
-            # Remove the old Docker image (ignore errors if it doesn't exist)
-            docker rmi ${{ secrets.DOCKER_USERNAME }}/restaurant-api:${{ github.sha }} || true
+            # Start New image
+            docker pull ${{ secrets.DOCKER_USERNAME }}/restaurant-api
+            docker tag ${{ secrets.DOCKER_USERNAME }}/restaurant-api restaurant-java-server
           
-            # Pull the new image
-            docker pull ${{ secrets.DOCKER_USERNAME }}/restaurant-api:${{ github.sha }}
-          
-            # Start the updated service
             docker-compose -f ${{ secrets.DOCKER_COMPOSE_PATH }} up -d
-          
-            # Clean up dangling images
-            docker image prune -f
           EOF
