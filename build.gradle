@@ -67,6 +67,9 @@ dependencies {
     // Feign Client
 //    implementation 'org.springframework.cloud:spring-cloud-starter-feign:1.4.7.RELEASE'
 
+    // Grafana
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 
 
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
