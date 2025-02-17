@@ -48,7 +48,7 @@ public class SecurityConfig {
                 .cors()
                 .and()
                 .csrf(AbstractHttpConfigurer::disable)
-
+                
                 .authorizeHttpRequests((request) -> request
                         // ----------------------------SWAGGER------------------------------
                         .requestMatchers(SWAGGER_WHITELIST).permitAll()

@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final MyUserDetailService userDetailsService;
@@ -36,6 +38,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String clientIp = request.getRemoteAddr();
+        log.info("Request from ip : {}", clientIp);
         AtomicInteger count = requestCountsPerIpAddress.getOrDefault(clientIp, new AtomicInteger(0));
 
         if (count.incrementAndGet() > REQUEST_LIMIT) {
@@ -74,13 +77,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         chain.doFilter(request, response);
 
-        Executors.newSingleThreadScheduledExecutor().schedule(this::clearRequestHistoryInMinute, 1 , TimeUnit.MINUTES);
+        Executors.newSingleThreadScheduledExecutor().schedule(this::clearRequestHistoryInMinute, 1, TimeUnit.MINUTES);
 
     }
 
-    private void clearRequestHistoryInMinute(){
-        requestCountsPerIpAddress.forEach((e , c)->{
-            if(c.get() < REQUEST_LIMIT){
+    private void clearRequestHistoryInMinute() {
+        requestCountsPerIpAddress.forEach((e, c) -> {
+            if (c.get() < REQUEST_LIMIT) {
                 c.set(0);
             }
         });
