@@ -56,7 +56,7 @@ public class EmailVerificationService {
         }
 
         //
-        if (lastRequest.get().getIssueDate().isAfter(getDefinedMinuteAgo())) {
+        if (lastRequest.isPresent() && lastRequest.get().getIssueDate().isAfter(getDefinedMinuteAgo())) {
             throw new AlreadyExistException(
                     "Verification session has opened yet! Your verificitaion code already exist",
                     String.format("ACTION.ERROR.verificateEmail email : %s", email)
