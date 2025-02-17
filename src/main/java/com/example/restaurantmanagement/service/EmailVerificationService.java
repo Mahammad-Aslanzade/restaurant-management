@@ -6,17 +6,16 @@ import com.example.restaurantmanagement.dao.repository.jpa.UserRepository;
 import com.example.restaurantmanagement.enums.ExceptionDetails;
 import com.example.restaurantmanagement.enums.VerificationStatus;
 import com.example.restaurantmanagement.exceptions.AlreadyExistException;
+import com.example.restaurantmanagement.exceptions.InvalidException;
 import com.example.restaurantmanagement.exceptions.NotFoundException;
 import com.example.restaurantmanagement.model.auth.ResponseMessage;
 import com.example.restaurantmanagement.model.user.VerifyEmailDto;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -28,12 +27,13 @@ public class EmailVerificationService {
     private final EmailService emailService;
     private final EmailVerificationRepository emailVerificationRepository;
     private final UserRepository userRepository;
-    private static final int expireMinute = 5;
     private static final Random random = new Random();
+    private static final Integer EXPIRE_TIME = 3;
 
     public ResponseMessage verifyEmail(VerifyEmailDto emailDto) {
         String email = emailDto.getEmail();
         log.info("ACTION.verifyEmail.start email : {}", email);
+
         //Does user exist with this email (checking process)
         if (userRepository.findByEmail(email).isPresent()) {
             throw new AlreadyExistException(
@@ -44,9 +44,19 @@ public class EmailVerificationService {
 
         Optional<EmailVerificationEntity> lastRequest = emailVerificationRepository.findLatestEntity(email);
 
-        //Checking request of user and Check session 2min if
+        //Checking request if expired
+        if(lastRequest.isPresent() && lastRequest.get().getIssueDate().isBefore(getDefinedMinuteAgo()) && lastRequest.get().getVerificationStatus() != VerificationStatus.FAILED){
+            lastRequest.get().setVerificationStatus(VerificationStatus.FAILED);
+            emailVerificationRepository.save(lastRequest.get());
+            throw new InvalidException(
+                    "verification-code",
+                    "Verification code has been expired!",
+                    String.format("ACTION.ERROR: expired verification code is detected email:%s", email)
+            );
+        }
 
-        if (lastRequest.isPresent() && lastRequest.get().getIssueDate().isAfter(getDefinedMinuteAgo())) {
+        //
+        if (lastRequest.get().getIssueDate().isAfter(getDefinedMinuteAgo())) {
             throw new AlreadyExistException(
                     "Verification session has opened yet! Your verificitaion code already exist",
                     String.format("ACTION.ERROR.verificateEmail email : %s", email)
@@ -63,6 +73,7 @@ public class EmailVerificationService {
                 "Restaurant App Verification",
                 templateName, context
         );
+
         //We save details to database at the end
         //Because it can be some problem during sending email
         EmailVerificationEntity verificatedEntity = new EmailVerificationEntity();
@@ -73,7 +84,7 @@ public class EmailVerificationService {
 
         emailVerificationRepository.save(verificatedEntity);
         log.info("ACTION.verifyEmail.end email : {}", email);
-        return new ResponseMessage("Successfull operation !");
+        return new ResponseMessage("Successfully operation !");
     }
 
     public Boolean checkValidCode(String email, String code) {
@@ -93,26 +104,7 @@ public class EmailVerificationService {
         emailVerificationRepository.save(emailVerification);
     }
 
-    @Transactional
-    public void defineExpiredCodes(){
-        LocalDateTime definedMinuteAgo = getDefinedMinuteAgo();
-        List<EmailVerificationEntity> emailVerifications = emailVerificationRepository.findAllByVerificationStatus(VerificationStatus.PENDING);
-        emailVerifications.forEach((verification)->{
-            System.out.println(verification);
-            if(verification.getIssueDate().isBefore(definedMinuteAgo)){
-                verification.setVerificationStatus(VerificationStatus.FAILED);
-                emailVerificationRepository.save(verification);
-                log.info(
-                        String.format("Email : %s | Verification-code : %s | EXPIRED",verification.getEmail(),verification.getVerificationCode())
-                );
-            }
-        });
-        emailVerificationRepository.saveAll(emailVerifications);
-    }
-
     private LocalDateTime getDefinedMinuteAgo(){
-        return LocalDateTime.now().minusMinutes(expireMinute);
+        return LocalDateTime.now().minusMinutes(EXPIRE_TIME);
     }
-
-
 }

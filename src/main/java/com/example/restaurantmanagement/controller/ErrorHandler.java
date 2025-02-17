@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,9 +26,9 @@ public class ErrorHandler {
         HashMap<String, String> errorList = new HashMap<>();
         List<FieldError> errors = ex.getBindingResult().getFieldErrors();
         errors.forEach((e) ->
-            errorList.put(
-                    e.getField(), e.getDefaultMessage()
-            )
+                errorList.put(
+                        e.getField(), e.getDefaultMessage()
+                )
         );
         return errorList;
     }
@@ -66,7 +67,7 @@ public class ErrorHandler {
 
     @ExceptionHandler(MissingServletRequestPartException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionMessageDto handleMissingRequestPart(MissingServletRequestPartException exception){
+    public ExceptionMessageDto handleMissingRequestPart(MissingServletRequestPartException exception) {
         log.error(exception.getMessage());
         return new ExceptionMessageDto(exception.getMessage());
     }
@@ -85,7 +86,7 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public HashMap<String, String> handleNotAllowedMessage(NotAllowedException exception) {
         log.error(exception.getLogMessage());
-        HashMap<String , String> response = new HashMap<>();
+        HashMap<String, String> response = new HashMap<>();
         response.put("message", exception.getMessage());
         return response;
     }
@@ -101,25 +102,30 @@ public class ErrorHandler {
 
     @ExceptionHandler(RelationExistException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionMessageDto handleRelationExistException(RelationExistException exception){
+    public ExceptionMessageDto handleRelationExistException(RelationExistException exception) {
         log.error(exception.getLogMessage());
         return new ExceptionMessageDto(exception.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionMessageDto handleInvalidEnumException(MethodArgumentTypeMismatchException exception){
+    public ExceptionMessageDto handleInvalidEnumException(MethodArgumentTypeMismatchException exception) {
         log.error("INCORRECT.ENUM");
         String message = String.format("Invalid value for field '%s': '%s'. Please provide one of the valid values.", exception.getName(), exception.getValue());
         return new ExceptionMessageDto(message);
     }
 
+    @ExceptionHandler(NoResourceFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public void noResourceFoundException(NoResourceFoundException noResourceFoundException) {
+        log.error("ACTION.ERROR message : {}", noResourceFoundException.getMessage());
+    }
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ExceptionMessageDto globalExceptionHandler(Exception e){
+    public ExceptionMessageDto globalExceptionHandler(Exception e) {
         log.error(e.getMessage());
         return new ExceptionMessageDto("INTERNAL_SERVER_ERROR");
     }
-
 
 }
