@@ -38,6 +38,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String clientIp = request.getRemoteAddr();
+        log.info("Request X-Real-IP : {}" , request.getHeader("X-Real-IP"));
         log.info("Request from ip : {}", clientIp);
         AtomicInteger count = requestCountsPerIpAddress.getOrDefault(clientIp, new AtomicInteger(0));
 
