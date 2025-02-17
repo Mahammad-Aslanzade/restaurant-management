@@ -38,19 +38,19 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String clientIp = request.getRemoteAddr();
-        log.info("Request X-Real-IP : {}" , request.getHeader("X-Real-IP"));
-        log.info("Request from ip : {}", clientIp);
-        AtomicInteger count = requestCountsPerIpAddress.getOrDefault(clientIp, new AtomicInteger(0));
-
-        if (count.incrementAndGet() > REQUEST_LIMIT) {
-            response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
-            response.setContentType("application/json");
-            String message = String.format("Too many request from ip : %s", clientIp);
-            response.getWriter().write("{ \"error\": \"" + message + "\" }");
-            response.getWriter().flush();
-        }
-
-        requestCountsPerIpAddress.put(clientIp, count);
+//        log.info("Request X-Real-IP : {}" , request.getHeader("X-Real-IP"));
+//        log.info("Request from ip : {}", clientIp);
+//        AtomicInteger count = requestCountsPerIpAddress.getOrDefault(clientIp, new AtomicInteger(0));
+//
+//        if (count.incrementAndGet() > REQUEST_LIMIT) {
+//            response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
+//            response.setContentType("application/json");
+//            String message = String.format("Too many request from ip : %s", clientIp);
+//            response.getWriter().write("{ \"error\": \"" + message + "\" }");
+//            response.getWriter().flush();
+//        }
+//
+//        requestCountsPerIpAddress.put(clientIp, count);
 
         final String authorizationHeader = request.getHeader("Authorization");
 
@@ -78,16 +78,16 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         chain.doFilter(request, response);
 
-        Executors.newSingleThreadScheduledExecutor().schedule(this::clearRequestHistoryInMinute, 1, TimeUnit.MINUTES);
+//        Executors.newSingleThreadScheduledExecutor().schedule(this::clearRequestHistoryInMinute, 1, TimeUnit.MINUTES);
 
     }
 
-    private void clearRequestHistoryInMinute() {
-        requestCountsPerIpAddress.forEach((e, c) -> {
-            if (c.get() < REQUEST_LIMIT) {
-                c.set(0);
-            }
-        });
-    }
+//    private void clearRequestHistoryInMinute() {
+//        requestCountsPerIpAddress.forEach((e, c) -> {
+//            if (c.get() < REQUEST_LIMIT) {
+//                c.set(0);
+//            }
+//        });
+//    }
 
 }
