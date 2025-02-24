@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.10
 
     steps:
       - name: Checkout repository
@@ -54,8 +54,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
             
             # Stop
-            docker stop restaurant-backend
-            docker remove restaurant-backend
+            docker compose -f ${{ secrets.DOCKER_COMPOSE_PATH }} down
             docker image remove ${{ secrets.DOCKER_USERNAME}}/restaurant-api
             docker image remove restaurant-java-server         
           
@@ -65,5 +64,4 @@ jobs:
           
             docker compose -f ${{ secrets.DOCKER_COMPOSE_PATH }} up -d
             
-            sudo systemctl reload nginx
           EOF
