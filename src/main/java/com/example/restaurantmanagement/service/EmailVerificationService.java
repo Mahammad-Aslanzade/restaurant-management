@@ -48,11 +48,7 @@ public class EmailVerificationService {
         if(lastRequest.isPresent() && lastRequest.get().getIssueDate().isBefore(getDefinedMinuteAgo()) && lastRequest.get().getVerificationStatus() != VerificationStatus.FAILED){
             lastRequest.get().setVerificationStatus(VerificationStatus.FAILED);
             emailVerificationRepository.save(lastRequest.get());
-            throw new InvalidException(
-                    "verification-code",
-                    "Verification code has been expired!",
-                    String.format("ACTION.ERROR: expired verification code is detected email:%s", email)
-            );
+            log.info(String.format("ACTION.ERROR: expired verification code is detected email:%s", email));
         }
 
         //
