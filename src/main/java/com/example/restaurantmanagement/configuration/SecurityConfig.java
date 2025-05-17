@@ -49,11 +49,12 @@ public class SecurityConfig {
                 .csrf().disable()
 
                 .authorizeHttpRequests((request) -> request
+                        // ----------------------------TEST_DEV-----------------------------
+                        .requestMatchers("/dev/test/**").permitAll()
                         // ----------------------------SWAGGER------------------------------
                         .requestMatchers(SWAGGER_WHITELIST).permitAll()
                         // ----------------------------AUTHENTICATION------------------------------
                         .requestMatchers("/auth/**").permitAll()
-
                         // ----------------------------UPLOADS------------------------------
                         .requestMatchers("/uploads/**").permitAll()
                         // ----------------------------DEPLOY------------------------------
